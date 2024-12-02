@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.12)
+
+project(modernlib)
+
+include_directories(AFTER ${modernlib_SOURCE_DIR}/include)
+
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(libsrc
+  src/allocator.c
+  src/data_buffer.c
+  src/dyn_cstr.c
+  src/stopwatch.c
+)
+
+add_library(modernlib SHARED
+  ${libsrc}
+)
+
+add_library(modernlib_static STATIC
+  ${libsrc}
+)
