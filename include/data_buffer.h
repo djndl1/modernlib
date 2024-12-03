@@ -9,36 +9,36 @@
 #include "errors.h"
 #include "allocator.h"
 
-typedef struct {
+typedef struct data_buffer {
     void *data;
     size_t length;
 
-    const allocator_t *allocator;
-} data_buffer_t;
+    const mem_allocator *allocator;
+} data_buffer;
 
 #define DATA_BUFFER_TRANSIENT(dat, len) \
-    ((data_buffer_t){ .data = dat, .length = len, .allocator = NULL })
+    ((data_buffer){ .data = dat, .length = len, .allocator = NULL })
 
 #define data_buffer_element_at(self, typ, idx) \
     (((typ*)self.data)[idx])
 #define byte_buffer_at(self, idx) data_buffer_element_at(self, uint8_t, idx)
 
-typedef struct {
+typedef struct buffer_alloc_result {
     int error;
-    data_buffer_t buffer;
-} buffer_alloc_result_t;
+    data_buffer buffer;
+} buffer_alloc_result;
 
-bool data_buffer_compare(const data_buffer_t self, data_buffer_t other, size_t count);
+bool data_buffer_compare(const data_buffer self, data_buffer other, size_t count);
 
-error_t data_buffer_resize(data_buffer_t self, size_t newsize);
+error_t data_buffer_resize(data_buffer self, size_t newsize);
 
-error_t data_buffer_copy_to(const data_buffer_t, data_buffer_t);
+error_t data_buffer_copy_to(const data_buffer, data_buffer);
 
-buffer_alloc_result_t data_buffer_new(size_t count, const allocator_t *allocator);
+buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator);
 
-buffer_alloc_result_t std_allocate_buffer(size_t);
+buffer_alloc_result std_allocate_buffer(size_t);
 
-void data_buffer_deallocate(data_buffer_t);
+void data_buffer_deallocate(data_buffer);
 
 
 

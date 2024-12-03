@@ -3,22 +3,22 @@
 
 #include <stddef.h>
 
-typedef struct {
+typedef struct mem_alloc_result {
     int error;
     void *mem;
-} mem_alloc_result_t;
+} mem_alloc_result;
 
-struct _allocator;
-typedef struct _allocator allocator_t;
+struct mem_allocator;
+typedef struct mem_allocator mem_allocator;
 
-struct _allocator {
+struct mem_allocator {
     void *user_data;
 
-    mem_alloc_result_t (*allocate)(const allocator_t * const self, size_t count);
-    void (*deallocate)(const allocator_t *const self, void *mem);
-    mem_alloc_result_t (*reallocate)(const allocator_t *const self, void *mem, size_t newsize);
+    mem_alloc_result (*allocate)(const mem_allocator * const self, size_t count);
+    void (*deallocate)(const mem_allocator *const self, void *mem);
+    mem_alloc_result (*reallocate)(const mem_allocator *const self, void *mem, size_t newsize);
 };
 
-extern const allocator_t *const std_allocator;
+extern const mem_allocator *const std_allocator;
 
 #endif // ALLOCATOR_H_

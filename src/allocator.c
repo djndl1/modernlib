@@ -3,37 +3,37 @@
 #include <stdlib.h>
 #include <errno.h>
 
-mem_alloc_result_t std_allocator_func(const allocator_t *const self, size_t count)
+mem_alloc_result std_allocator_func(const mem_allocator *const self, size_t count)
 {
     void *mem = malloc(count);
     if (mem == NULL) {
-        return (mem_alloc_result_t) { .error = errno, .mem = NULL };
+        return (mem_alloc_result) { .error = errno, .mem = NULL };
     }
 
-    return (mem_alloc_result_t) { .error = 0, .mem = mem };
+    return (mem_alloc_result) { .error = 0, .mem = mem };
 }
 
-void std_deallocator_func(const allocator_t *const self, void *mem)
+void std_deallocator_func(const mem_allocator *const self, void *mem)
 {
     free(mem);
 }
 
-mem_alloc_result_t std_reallocator_func(const allocator_t *const self, void *mem, size_t newsize)
+mem_alloc_result std_reallocator_func(const mem_allocator *const self, void *mem, size_t newsize)
 {
     void *newmem = realloc(mem, newsize);
     if (newmem == NULL) {
-        return (mem_alloc_result_t) { .error = errno, .mem = NULL };
+        return (mem_alloc_result) { .error = errno, .mem = NULL };
     }
 
-    return (mem_alloc_result_t) { .error = 0, .mem = newmem };
+    return (mem_alloc_result) { .error = 0, .mem = newmem };
 }
 
 
-static const allocator_t _std_allocator_table = {
+static const mem_allocator _std_allocator_table = {
     .user_data = NULL,
     .allocate = std_allocator_func,
     .deallocate = std_deallocator_func,
     .reallocate = std_reallocator_func,
 };
 
-const allocator_t *const std_allocator = &_std_allocator_table;
+const mem_allocator *const std_allocator = &_std_allocator_table;

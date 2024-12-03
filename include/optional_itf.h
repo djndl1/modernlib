@@ -19,7 +19,7 @@ typedef struct optional_type_name {
 MODERNLIB_INLINE
 static inline optional_type_name optional_funcname(some)(optional_element_type val)
 {
-    return (optional_name){ ._present = true, ._hidden_obj.t_value = val, };
+    return (optional_type_name){ ._present = true, ._hidden_obj.t_value = val, };
 }
 
 #define optional_map_to(U, opt, mapping) (optional_present(opt) ?           \

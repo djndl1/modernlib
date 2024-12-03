@@ -2,24 +2,24 @@
 
 #include <time.h>
 
-stopwatch_t stopwatch_new()
+stopwatch stopwatch_new()
 {
-    stopwatch_t sw = { -1, -1 };
+    stopwatch sw = { -1, -1 };
 
     return sw;
 }
 
-void stopwatch_start(stopwatch_t *self)
+void stopwatch_start(stopwatch *self)
 {
     self->start = clock();
 }
 
-void stopwatch_stop(stopwatch_t *self)
+void stopwatch_stop(stopwatch *self)
 {
     self->end = clock();
 }
 
-clock_t stopwatch_elapsed_clocks(const stopwatch_t self)
+clock_t stopwatch_elapsed_clocks(const stopwatch self)
 {
     if (self.end == -1) {
         return 0;
@@ -27,7 +27,7 @@ clock_t stopwatch_elapsed_clocks(const stopwatch_t self)
     return self.end - self.start;
 }
 
-timespan_t stopwatch_elapsed_time(const stopwatch_t self)
+timespan stopwatch_elapsed_time(const stopwatch self)
 {
     clock_t clocks = stopwatch_elapsed_clocks(self);
     double secs = ((double)clocks) / CLOCKS_PER_SEC;

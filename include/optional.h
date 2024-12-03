@@ -23,6 +23,5 @@
 #define match_end }
 
 #define _optional_val(opt) (opt._hidden_obj.t_value)
-#define optional_funcname(func) CONCAT()
 
 #endif // MAYBE_OPTIONAL_H

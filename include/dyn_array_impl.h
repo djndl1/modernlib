@@ -9,14 +9,14 @@
 
 dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
                                                      size_t count,
-                                                     const allocator_t *allocator)
+                                                     const mem_allocator *allocator)
 {
      size_t elem_size = sizeof(dyn_array_element_type);
      buffer_alloc_result_t alloc_res = data_buffer_new(count * elem_size, allocator);
      if (alloc_res.error) {
          return (dyn_array_result_type_name) { .error = alloc_res.error };
      }
-     data_buffer_t buf = alloc_res.buffer;
+     data_buffer buf = alloc_res.buffer;
 
      memcpy(buf.data, data, count * elem_size);
 
@@ -26,8 +26,8 @@ dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
      return (dyn_array_result_type_name) { .error = 0, .array = arr };
 }
 
-dyn_array_result_type_name dyn_array_func(from_buffer)(const data_buffer_t data,
-                                                       const allocator_t *allocator)
+dyn_array_result_type_name dyn_array_func(from_buffer)(const data_buffer data,
+                                                       const mem_allocator *allocator)
 {
     return dyn_array_func(from_data)(data.data, data.length, allocator);
 }
