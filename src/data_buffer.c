@@ -51,12 +51,12 @@ void data_buffer_deallocate(data_buffer buf)
 error_t data_buffer_resize(data_buffer self, size_t newsize)
 {
     if (self.allocator == NULL || self.allocator->reallocate == NULL) {
-        return ERROR(E_INVALID_OP);
+        return ERR_FROM_CODE(E_INVALID_OP);
     }
 
     mem_alloc_result r = self.allocator->reallocate(self.allocator, self.data, newsize);
     if (r.error != 0) {
-        return ERROR(r.error);
+        return ERR_FROM_CODE(r.error);
     }
     self.data = r.mem;
     self.length = newsize;
@@ -94,11 +94,11 @@ error_t data_buffer_copy_to(const data_buffer self, data_buffer target)
 {
     if (self.data == NULL || self.length == 0
          || target.data == NULL || target.length == 0) {
-        return ERROR(EINVAL);
+        return ERR_FROM_CODE(EINVAL);
     }
 
     if (buffers_overlapping(self, target)) {
-        return ERROR(E_OVERLAP_MEM);
+        return ERR_FROM_CODE(E_OVERLAP_MEM);
     }
 
     size_t l = MIN(self.length, target.length);

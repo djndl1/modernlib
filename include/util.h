@@ -5,8 +5,8 @@ typedef struct {
     int error;
 } error_t;
 
-#define ERROR(e) ((error_t) { 0 })
-#define E_OK ERROR(0)
+#define ERR_FROM_CODE(e) ((error_t) { .error = e })
+#define E_OK ERR_FROM_CODE(0)
 
 #define MIN(a, b) (((a) > (b)) ? (b) : (a))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
