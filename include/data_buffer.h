@@ -34,6 +34,8 @@ error_t data_buffer_resize(data_buffer self, size_t newsize);
 
 error_t data_buffer_copy_to(const data_buffer, data_buffer);
 
+error_t data_buffer_copy_from(data_buffer self, const void *data, size_t byte_count);
+
 buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator);
 
 buffer_alloc_result std_allocate_buffer(size_t);

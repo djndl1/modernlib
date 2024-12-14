@@ -12,6 +12,9 @@ set(libsrc
   src/data_buffer.c
   src/dyn_cstr.c
   src/stopwatch.c
+  src/dyn_wchar_array.c
+  src/dyn_char_array.c
+  src/dyn_cwstr.c
 )
 
 add_library(modernlib SHARED

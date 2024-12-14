@@ -1,35 +1,76 @@
-#if !defined(dyn_array_element_type) || !defined(dyn_array_type_name)
-#error "dynamic array type or dynamic array name not defined!"
-#endif
+#include "data_buffer.h"
+#include "errors.h"
+#include <errno.h>
 
 #include "dyn_array_macro.h"
 #include <string.h>
 
+dyn_array_result_type_name dyn_array_func(of_capacity)(size_t capacity,
+                                                       const mem_allocator *allocator)
+{
+     size_t elem_size = sizeof(dyn_array_element_type);
+     buffer_alloc_result alloc_res = data_buffer_new(capacity * elem_size, allocator);
+     if (alloc_res.error) {
+         return (dyn_array_result_type_name) { .error = alloc_res.error };
+     }
+     data_buffer buf = alloc_res.buffer;
+     dyn_array_type_name arr = { ._data = buf, ._len = 0 };
 
+     return (dyn_array_result_type_name) { .error = 0, .array = arr };
+}
 
 dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
                                                      size_t count,
                                                      const mem_allocator *allocator)
 {
-     size_t elem_size = sizeof(dyn_array_element_type);
-     buffer_alloc_result_t alloc_res = data_buffer_new(count * elem_size, allocator);
-     if (alloc_res.error) {
-         return (dyn_array_result_type_name) { .error = alloc_res.error };
-     }
-     data_buffer buf = alloc_res.buffer;
+    dyn_array_result_type_name creation_result = dyn_array_func(of_capacity)(count, allocator);
+    if (creation_result.error) {
+        return creation_result;
+    }
+    dyn_array_type_name newarr = creation_result.array;
 
-     memcpy(buf.data, data, count * elem_size);
+    error_t err = data_buffer_copy_from(newarr._data, data, count * sizeof(dyn_array_element_type));
+    if (err.error) {
+        data_buffer_deallocate(newarr._data);
+        return (dyn_array_result_type_name) { .error = err.error };
+    }
+    newarr._len = count;
 
-     dyn_array_type_name arr = { ._data = buf };
-     arr._len = count;
-
-     return (dyn_array_result_type_name) { .error = 0, .array = arr };
+    return (dyn_array_result_type_name) { .array = newarr };
 }
 
 dyn_array_result_type_name dyn_array_func(from_buffer)(const data_buffer data,
                                                        const mem_allocator *allocator)
 {
     return dyn_array_func(from_data)(data.data, data.length, allocator);
+}
+
+dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name other,
+                                                      const mem_allocator *allocator)
+{
+    return dyn_array_func(from_buffer)(other._data, allocator);
+}
+
+dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
+{
+    if (idx >= dyn_array_size(self)) {
+        return (dyn_array_get_result_type_name){ .error = ERANGE };
+    }
+
+
+    return (dyn_array_get_result_type_name){
+        .element = data_buffer_element_at(self._data, dyn_array_element_type, idx),
+    };
+}
+
+error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value)
+{
+    if (idx >= dyn_array_size(self)) {
+        return ERR_FROM_CODE(ERANGE);
+    }
+
+    data_buffer_element_at(self._data, dyn_array_element_type, idx) = value;
+    return E_OK;
 }
 
 void dyn_array_func(destroy)(dyn_array_type_name self)
@@ -40,6 +81,3 @@ void dyn_array_func(destroy)(dyn_array_type_name self)
 
     self._data.allocator->deallocate(self._data.allocator, self._data.data);
 }
-
-#undef dyn_array_element_type
-#undef dyn_array_type_name

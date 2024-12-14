@@ -13,7 +13,7 @@ typedef struct {
 
 #define TOKENIZE(t) #t
 #define _CONCAT(a, b) a##b
-#define CONCAT(a, b) CONCAT(a, b)
+#define CONCAT(a, b) _CONCAT(a, b)
 #define INTERNAL_VAR(v) CONCAT(v, __LINE__)
 
 // both begin and end are required to be expressions
