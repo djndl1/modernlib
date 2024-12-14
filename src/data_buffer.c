@@ -110,6 +110,6 @@ error_t data_buffer_copy_to(const data_buffer self, data_buffer target)
 
 error_t data_buffer_copy_from(data_buffer self, const void *data, size_t byte_count)
 {
-    const data_buffer temp_buf = (data_buffer){ .data = data, .length = byte_count, .allocator = self.allocator };
+    const data_buffer temp_buf = (data_buffer){ .data = (void*)data, .length = byte_count, .allocator = self.allocator };
     return data_buffer_copy_to(temp_buf, self);
 }
