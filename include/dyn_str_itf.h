@@ -42,6 +42,8 @@ static inline dyn_string_character_type dyn_string_func(at)(const dyn_string_typ
 
 dyn_string_result_type_name dyn_string_func(from)(dyn_string_type_name str, const mem_allocator *allocator);
 
+dyn_string_result_type_name dyn_string_func(from_buffer)(data_buffer buf, const mem_allocator *allocator);
+
 static inline dyn_string_result_type_name dyn_string_func(from_stdalloc)(const dyn_string_type_name str)
 {
     return dyn_string_func(from)(str, std_allocator);

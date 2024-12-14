@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include <wchar.h>
+#include <errno.h>
 
 static dyn_string_result_type_name _create_dyn_str_from_data(const void *data,
                                                              size_t count,
@@ -29,12 +30,11 @@ static dyn_string_result_type_name _create_dyn_str_from_data(const void *data,
 
 static size_t nts_len(const dyn_string_character_type *str)
 {
-    /*
     if (sizeof(dyn_string_character_type) == sizeof(char))
-        return strlen(str);
+        return strlen((char*)str);
     else if (sizeof(dyn_string_character_type) == sizeof(wchar_t))
-        return wcslen(str);
-    else*/
+        return wcslen((wchar_t*)str);
+    else
     {
         size_t l = 0;
         while (str != NULL) l++;
@@ -42,8 +42,21 @@ static size_t nts_len(const dyn_string_character_type *str)
     }
 }
 
+dyn_string_result_type_name dyn_string_func(from_buffer)(data_buffer buf,
+                                                         const mem_allocator *allocator)
+{
+    if (buf.data == NULL || buf.length == 0) {
+        return (dyn_string_result_type_name){
+            .error = EINVAL,
+        };
+    }
+    size_t l = buf.length / sizeof(dyn_string_character_type);
+
+    return _create_dyn_str_from_data(buf.data, l, allocator);
+}
+
 static dyn_string_result_type_name _create_dyn_str_from_nts(const dyn_string_character_type *nts,
-                                                             const mem_allocator *allocator)
+                                                            const mem_allocator *allocator)
 {
      size_t l = nts_len(nts);
      return  _create_dyn_str_from_data(nts, l, allocator);
