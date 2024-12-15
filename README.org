@@ -1,0 +1,89 @@
+#+title: Modernlib: a modern utility library for modern C
+
+* Generics
+
+Generic types and functions are implemented as templates based on macros.
+A template module is divided into three files:
+
+- the interface header (=*_itf.h=): this file is not protected by include guards
+  and contains template declarations, inline function definitions and type definitions.
+
+- the implementation header (=*_impl.h=): this file is not protected by include
+  guards either and contains the actual implementations of functions or types
+  declared in the interface header.
+
+- the shared macro header (=*_macro.h=): this file is protected by include
+  guards and thus included only once in a translation unit. This file should
+  contains macro definitions used by both the interface and the implementation
+  and possibly by client code.
+
+  A template module is controlled by several implementation-specific macros.
+  Client code has these macros defined and then includes them to generate actual
+  instantiated code.
+
+** Instantiation
+
+With C++, the template system automatically inserts the type parameter and
+generates code, possibly recursively with instantiated type as the parameter of
+another template. Due the limitation of C preprocessor system, instantiation has
+to be performed manually.
+
+*** Simple Templates That Does Not Depends on Other Templates
+
+Suppose we have a template module of adding two numbers with files =add_itf.h=,
+=add_impl.h=, =add_macro.h= and we want to use =int= as the argument type.
+
+- create a header file with include guards as the instantiated interface, define the type macros required by that
+  module in the file, then include the interface header =add_itf.h=.
+
+  #+begin_src c
+#ifndef ADD_INT_H
+#define ADD_INT_H
+
+// instantiate the interface
+#define add_func_type_name int
+#include <add_itf.h>
+#undef add_func_type_name
+
+
+#endif
+  #+end_src
+
+- create an implementation C file as the instantiated implementation,
+  first include the header created above, then define
+  the type macros required by that module in the file, then include the
+  implementation header =add_impl.h=
+
+  #+begin_src c
+#include "add_int.h"
+
+#define add_func_type_name int
+#include <add_impl.h>
+#undef add_func_type_name
+
+  #+end_src
+
+The implementation file of a template module is never meant to be instantiated
+without being preceded by the instantiation of its paired interface due to
+dependency on the type defintions, macros, function declarations in the
+interface. However, directly including the interface file in the implementation seems
+okay for the implementation to instantiate alone, but
+
+- the interface file may undefine the required input macros at its end, requiring the
+  implementation to define these input macros again /internally/ after the inclusion of
+  the interface.
+
+- The interface is now instantiated twice, both as a header and in an
+  implementation file. The header has to be provided to client code.
+  If the implementation instantiation does not include the instantiated header,
+  but instantiates it on its own, the same code is duplicated, which might cause
+  inconsistency if different macros are defined for the interface instantiation
+  and the implementation instantiation.
+
+To allow instantiation with different parameters, neither the template interface nor the
+template implementation is guarded, which might cause multiple definitions if
+not correctly handled. Do not include them on the spot in a large project, this
+would easily cause multiple definitions due to multiple instantiations of the
+same type unless the template module provided a way to customize related symbol
+names. Instantiating them separately and treating them as yet another normal C
+module is the easier way to go.
