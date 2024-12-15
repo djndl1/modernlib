@@ -20,7 +20,7 @@ set(libsrc
 add_library(modernlib SHARED
   ${libsrc}
 )
-
+set_target_properties(modernlib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 add_library(modernlib_static STATIC
   ${libsrc}
 )

@@ -6,6 +6,10 @@
 #include <stdint.h>
 #include <inttypes.h>
 
+#ifdef _MSC_VER
+#include <winsock.h>
+#endif
+
 typedef struct timespan {
     int64_t _ticks;
 } timespan;

@@ -66,11 +66,11 @@ error_t data_buffer_resize(data_buffer self, size_t newsize)
 
 static bool buffers_overlapping(const data_buffer a, const data_buffer b)
 {
-    void *s1 = a.data;
-    void *e1 = a.data + a.length;
+    uint8_t *s1 = a.data;
+    uint8_t *e1 = (uint8_t*)a.data + a.length;
 
-    void *s2 = b.data;
-    void *e2 = b.data + b.length;
+    uint8_t *s2 = b.data;
+    uint8_t *e2 = (uint8_t*)b.data + b.length;
 
     return MIN(e1, e2) - MAX(s1, s2) > 0;
 }
