@@ -32,6 +32,16 @@ dyn_array_result_type_name dyn_array_func(from_buffer)(const data_buffer data,
 dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name other,
                                                       const mem_allocator *allocator);
 
+static inline size_t dyn_array_func(capacity)(const dyn_array_type_name self)
+{
+    return self._data.length / sizeof(dyn_array_element_type);
+}
+
+static inline size_t dyn_array_func(size)(const dyn_array_type_name self)
+{
+    return self._len;
+}
+
 typedef struct dyn_array_get_result_type_name {
     int error;
     dyn_array_element_type element;

@@ -53,7 +53,7 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
 
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
 {
-    if (idx >= dyn_array_size(self)) {
+    if (idx >= dyn_array_func(size)(self)) {
         return (dyn_array_get_result_type_name){ .error = ERANGE };
     }
 
@@ -65,7 +65,7 @@ dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name sel
 
 error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value)
 {
-    if (idx >= dyn_array_size(self)) {
+    if (idx >= dyn_array_func(size)(self)) {
         return ERR_FROM_CODE(ERANGE);
     }
 
