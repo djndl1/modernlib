@@ -53,5 +53,21 @@ error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_arra
 
 void dyn_array_func(destroy)(dyn_array_type_name self);
 
+static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_name *self)
+{
+    if (self == nullptr) return nullptr;
+
+    dyn_array_element_type *pointer = self->_data.data;
+    self->_data.data = nullptr;
+    self->_len = 0;
+
+    return pointer;
+}
+
+static inline dyn_array_element_type *dyn_array_func(get_data)(dyn_array_type_name self)
+{
+    return self._data.data;
+}
+
 #undef dyn_array_element_type
 #undef dyn_array_type_name

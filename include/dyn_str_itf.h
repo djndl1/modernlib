@@ -31,7 +31,7 @@ typedef struct dyn_string_result_type_name {
 
 static inline dyn_string_character_type *dyn_string_func(nts)(const dyn_string_type_name self)
 {
-    return ((dyn_string_character_type*)(self._char_array._data.data));
+    return dyn_string_internal_array_func(get_data)(self._char_array);
 }
 
 static inline dyn_string_character_type dyn_string_func(at)(const dyn_string_type_name self, size_t idx)
@@ -71,6 +71,11 @@ int dyn_string_func(compare)(dyn_string_type_name self, dyn_string_type_name oth
 static bool dyn_string_func(equal)(dyn_string_type_name self, dyn_string_type_name other)
 {
     return dyn_string_func(compare(self, other)) == 0;
+}
+
+static inline dyn_string_character_type *dyn_string_func(release)(dyn_string_type_name *self)
+{
+    return dyn_string_internal_array_func(release)(&(self->_char_array));
 }
 
 void dyn_string_func(destroy)(dyn_string_type_name self);
