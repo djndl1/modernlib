@@ -1,6 +1,8 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include "nullptr.h"
+
 typedef struct {
     int error;
 } error_t;
