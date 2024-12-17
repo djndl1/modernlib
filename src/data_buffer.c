@@ -16,13 +16,13 @@ buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator
     buffer_alloc_result result = {
     .error = 0,
     .buffer = {
-        .data = NULL,
+        .data = nullptr,
         .length = 0,
-        .allocator = NULL,
+        .allocator = nullptr,
         }
     };
 
-    if (allocator == NULL || allocator->allocate == NULL) {
+    if (allocator == nullptr || allocator->allocate == nullptr) {
         result.error = EINVAL;
         return result;
     }
@@ -43,14 +43,14 @@ buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator
 
 void data_buffer_deallocate(data_buffer buf)
 {
-    if (buf.allocator != NULL && buf.allocator->deallocate != NULL) {
+    if (buf.allocator != nullptr && buf.allocator->deallocate != nullptr) {
         buf.allocator->deallocate(buf.allocator, buf.data);
     }
 }
 
 error_t data_buffer_resize(data_buffer self, size_t newsize)
 {
-    if (self.allocator == NULL || self.allocator->reallocate == NULL) {
+    if (self.allocator == nullptr || self.allocator->reallocate == nullptr) {
         return ERR_FROM_CODE(E_INVALID_OP);
     }
 
@@ -77,8 +77,8 @@ static bool buffers_overlapping(const data_buffer a, const data_buffer b)
 
 bool data_buffer_compare(const data_buffer self, data_buffer other, size_t count)
 {
-    if (self.data == NULL && other.data == NULL
-        || self.data != NULL && other.data == NULL) {
+    if (self.data == nullptr && other.data == nullptr
+        || self.data != nullptr && other.data == nullptr) {
         return false;
     }
 
@@ -92,8 +92,8 @@ bool data_buffer_compare(const data_buffer self, data_buffer other, size_t count
 
 error_t data_buffer_copy_to(const data_buffer self, data_buffer target)
 {
-    if (self.data == NULL || self.length == 0
-         || target.data == NULL || target.length == 0) {
+    if (self.data == nullptr || self.length == 0
+         || target.data == nullptr || target.length == 0) {
         return ERR_FROM_CODE(EINVAL);
     }
 

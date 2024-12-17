@@ -37,7 +37,7 @@ static size_t nts_len(const dyn_string_character_type *str)
     else
     {
         size_t l = 0;
-        while (str != NULL) l++;
+        while (str != nullptr) l++;
         return l;
     }
 }
@@ -45,7 +45,7 @@ static size_t nts_len(const dyn_string_character_type *str)
 dyn_string_result_type_name dyn_string_func(from_buffer)(data_buffer buf,
                                                          const mem_allocator *allocator)
 {
-    if (buf.data == NULL || buf.length == 0) {
+    if (buf.data == nullptr || buf.length == 0) {
         return (dyn_string_result_type_name){
             .error = EINVAL,
         };

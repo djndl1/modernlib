@@ -4,7 +4,7 @@
 
 #include "data_buffer.h"
 #include "allocator.h"
-#include "util.h"
+#include "basis.h"
 
 #include "dyn_array_macro.h"
 

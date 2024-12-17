@@ -9,7 +9,7 @@ extern "C" {
 #include <stddef.h>
 
 #include <stdbool.h>
-#include "util.h"
+#include "basis.h"
 #include "errors.h"
 #include "allocator.h"
 
@@ -21,7 +21,7 @@ typedef struct data_buffer {
 } data_buffer;
 
 #define DATA_BUFFER_TRANSIENT(dat, len) \
-    ((data_buffer){ .data = dat, .length = len, .allocator = NULL })
+    ((data_buffer){ .data = dat, .length = len, .allocator = nullptr })
 
 #define data_buffer_element_at(self, typ, idx) \
     (((typ*)self.data)[idx])

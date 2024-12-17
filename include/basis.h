@@ -2,6 +2,8 @@
 #define UTIL_H_
 
 #include "nullptr.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 typedef struct {
     int error;
