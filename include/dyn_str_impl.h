@@ -28,21 +28,7 @@ static dyn_string_result_type_name _create_dyn_str_from_data(const void *data,
     };
 }
 
-static size_t nts_len(const dyn_string_character_type *str)
-{
-    if (sizeof(dyn_string_character_type) == sizeof(char))
-        return strlen((char*)str);
-    else if (sizeof(dyn_string_character_type) == sizeof(wchar_t))
-        return wcslen((wchar_t*)str);
-    else
-    {
-        size_t l = 0;
-        while (str != nullptr) l++;
-        return l;
-    }
-}
-
-dyn_string_result_type_name dyn_string_func(from_buffer)(data_buffer buf,
+dyn_string_result_type_name dyn_string_func(from_buffer)(const data_buffer buf,
                                                          const mem_allocator *allocator)
 {
     if (buf.data == nullptr || buf.length == 0) {
@@ -62,7 +48,7 @@ static dyn_string_result_type_name _create_dyn_str_from_nts(const dyn_string_cha
      return  _create_dyn_str_from_data(nts, l, allocator);
 }
 
-dyn_string_result_type_name dyn_string_func(from)(dyn_string_type_name str,
+dyn_string_result_type_name dyn_string_func(from)(const dyn_string_type_name str,
                                                   const mem_allocator *allocator)
 {
      return _create_dyn_str_from_data(
@@ -77,9 +63,12 @@ dyn_string_result_type_name dyn_string_func(from_nts)(const dyn_string_character
 }
 
 
-int dyn_string_func(compare)(dyn_string_type_name self, dyn_string_type_name other)
+int dyn_string_func(compare)(const dyn_string_type_name self, const dyn_string_type_name other)
 {
-    return 0;
+    return ntscmp(
+        dyn_string_func(nts)(self),
+        dyn_string_func(nts)(other)
+    );
 }
 
 void dyn_string_func(destroy)(dyn_string_type_name self)

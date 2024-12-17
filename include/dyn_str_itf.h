@@ -39,10 +39,9 @@ static inline dyn_string_character_type dyn_string_func(at)(const dyn_string_typ
     return dyn_string_func(nts)(self)[idx];
 }
 
-
 dyn_string_result_type_name dyn_string_func(from)(dyn_string_type_name str, const mem_allocator *allocator);
 
-dyn_string_result_type_name dyn_string_func(from_buffer)(data_buffer buf, const mem_allocator *allocator);
+dyn_string_result_type_name dyn_string_func(from_buffer)(const data_buffer buf, const mem_allocator *allocator);
 
 static inline dyn_string_result_type_name dyn_string_func(from_stdalloc)(const dyn_string_type_name str)
 {
@@ -56,19 +55,20 @@ static inline dyn_string_result_type_name dyn_string_func(nts_stdalloc)(const dy
     return dyn_string_func(from_nts)(lit, std_allocator);
 }
 
-static inline size_t dyn_string_func(len)(dyn_string_type_name self)
+static inline size_t dyn_string_func(len)(const dyn_string_type_name self)
 {
-    return self._char_array._len > 0 ? self._char_array._len - 1 : 0;
+    size_t arr_len = dyn_string_internal_array_func(size)(self._char_array);
+    return arr_len > 0 ? arr_len - 1 : 0;
 }
 
-static inline size_t dyn_string_func(capacity)(dyn_string_type_name self)
+static inline size_t dyn_string_func(capacity)(const dyn_string_type_name self)
 {
-    return (self._char_array._data.length);
+    return dyn_string_internal_array_func(capacity)(self._char_array);
 }
 
-int dyn_string_func(compare)(dyn_string_type_name self, dyn_string_type_name other);
+int dyn_string_func(compare)(const dyn_string_type_name self, const dyn_string_type_name other);
 
-static bool dyn_string_func(equal)(dyn_string_type_name self, dyn_string_type_name other)
+static bool dyn_string_func(equal)(const dyn_string_type_name self, const dyn_string_type_name other)
 {
     return dyn_string_func(compare(self, other)) == 0;
 }
