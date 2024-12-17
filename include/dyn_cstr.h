@@ -1,6 +1,10 @@
 #ifndef DYN_CSTR_H_
 #define DYN_CSTR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "dyn_char_array.h"
 
 #undef dyn_string_internal_array_type
@@ -18,5 +22,9 @@
 #include "dyn_str_itf.h"
 #undef dyn_string_type_name
 #undef dyn_string_character_type
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // DYN_CSTR_H_

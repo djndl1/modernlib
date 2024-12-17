@@ -1,6 +1,10 @@
 #ifndef TIMESPAN_H_
 #define TIMESPAN_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <time.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -161,5 +165,10 @@ static inline struct timeval timespan_as_timeval(timespan ts)
 }
 
 // TODO format, parsing
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TIMESPAN_H_

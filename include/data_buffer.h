@@ -1,6 +1,10 @@
 #ifndef BUFFER_H_
 #define BUFFER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -43,5 +47,8 @@ buffer_alloc_result std_allocate_buffer(size_t);
 void data_buffer_deallocate(data_buffer);
 
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BUFFER_H_

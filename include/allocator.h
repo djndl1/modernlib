@@ -1,6 +1,10 @@
 #ifndef ALLOCATOR_H_
 #define ALLOCATOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 typedef struct mem_alloc_result {
@@ -20,5 +24,9 @@ struct mem_allocator {
 };
 
 extern const mem_allocator *const std_allocator;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // ALLOCATOR_H_
