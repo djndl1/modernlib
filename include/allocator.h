@@ -16,7 +16,7 @@ struct mem_allocator;
 typedef struct mem_allocator mem_allocator;
 
 struct mem_allocator {
-    void *user_data;
+    void * user_data;
 
     mem_alloc_result (*allocate)(const mem_allocator * const self, size_t count);
     void (*deallocate)(const mem_allocator *const self, void *mem);
@@ -24,6 +24,9 @@ struct mem_allocator {
 };
 
 extern const mem_allocator *const std_allocator;
+
+static inline allocator_allocate(const mem_allocator alloc, size_t count) (alloc->allocate(alloc, count))
+#define allocator_deallocate(alloc, count) (alloc->deallocate(alloc, count))
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,7 @@
 #include "data_buffer.h"
 #include "allocator.h"
 #include "basis.h"
+#include "collection.h"
 
 #include "dyn_array_macro.h"
 
@@ -68,6 +69,8 @@ static inline dyn_array_element_type *dyn_array_func(get_data)(dyn_array_type_na
 {
     return self._data.data;
 }
+
+collection_obj dyn_array_func(as_collection)(dyn_array_type_name self);
 
 #undef dyn_array_element_type
 #undef dyn_array_type_name
