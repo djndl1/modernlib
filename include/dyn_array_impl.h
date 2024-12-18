@@ -83,15 +83,15 @@ void dyn_array_func(destroy)(dyn_array_type_name self)
 }
 
 typedef struct {
-    const collection_obj base;
-    const dyn_array_type_name impl;
+    collection_obj base;
+    dyn_array_type_name impl;
 } interface_impl(collection, dyn_array_type_name);
 
 static size_t dyn_array_func(collection_count)(const collection_obj *self)
 {
     interface_impl(collection, dyn_array_type_name) *impl = (interface_impl(collection, dyn_array_type_name)*)self;
 
-    return dyn_array_func(size)(impl->impl)
+    return dyn_array_func(size)(impl->impl);
 }
 
 static const collection_itf interface_vtbl_name(collection, dyn_array_type_name) = {
@@ -100,5 +100,14 @@ static const collection_itf interface_vtbl_name(collection, dyn_array_type_name)
 
 collection_obj *dyn_array_func(as_collection)(dyn_array_type_name self, const mem_allocator *allocator)
 {
-    interface_impl(collection, dyn_array_type_name) *wrapper = allocator->allocate()
+    mem_alloc_result alloc_result = allocate_type(allocator, interface_impl(collection, dyn_array_type_name));
+
+    if (alloc_result.error) {
+        return nullptr;
+    }
+
+    interface_impl(collection, dyn_array_type_name) *wrapper = alloc_result.mem;
+    wrapper->base = collection_new(allocator, &interface_vtbl_name(collection, dyn_array_type_name));
+    wrapper->impl = self;
+    return (collection_obj*)wrapper;
 }

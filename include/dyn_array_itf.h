@@ -70,7 +70,7 @@ static inline dyn_array_element_type *dyn_array_func(get_data)(dyn_array_type_na
     return self._data.data;
 }
 
-collection_obj dyn_array_func(as_collection)(dyn_array_type_name self);
+collection_obj *dyn_array_func(as_collection)(dyn_array_type_name self, const mem_allocator *allocator);
 
 #undef dyn_array_element_type
 #undef dyn_array_type_name

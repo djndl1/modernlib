@@ -11,8 +11,22 @@ typedef struct collection_itf {
 } collection_itf;
 
 typedef struct collection_obj {
-    const interface_base base;
+    interface_base base;
     const collection_itf *itf;
 } collection_obj;
+
+static inline collection_obj collection_new(const mem_allocator *allocator,
+                                            const collection_itf *itf)
+{
+    return (collection_obj){
+        .base = (interface_base){ allocator },
+        .itf = itf,
+    };
+}
+
+static inline size_t collection_count(const struct collection_obj* self)
+{
+    return self->itf->count(self);
+}
 
 #endif // COLLECTION_H_
