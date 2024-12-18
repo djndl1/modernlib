@@ -6,6 +6,8 @@ extern "C" {
 #endif
 
 #include <stddef.h>
+#include <errno.h>
+#include "basis.h"
 
 typedef struct mem_alloc_result {
     int error;
@@ -25,8 +27,34 @@ struct mem_allocator {
 
 extern const mem_allocator *const std_allocator;
 
-static inline allocator_allocate(const mem_allocator alloc, size_t count) (alloc->allocate(alloc, count))
-#define allocator_deallocate(alloc, count) (alloc->deallocate(alloc, count))
+static inline mem_alloc_result allocator_allocate(const mem_allocator *self, size_t count)
+{
+    if (self == nullptr || self->allocate != nullptr) {
+        return (mem_alloc_result){ .error = EINVAL };
+    }
+    return self->allocate(self, count);
+}
+
+
+static inline void allocator_deallocate(const mem_allocator *const self, void *mem)
+{
+    if (self == nullptr || self->deallocate != nullptr) {
+        return;
+    }
+
+    return self->deallocate(self, mem);
+}
+
+static inline mem_alloc_result allocator_reallocate(const mem_allocator *const self, void *mem, size_t newsize)
+{
+    if (self == nullptr || self->reallocate != nullptr) {
+        return (mem_alloc_result){ .error = EINVAL };
+    }
+
+    return self->reallocate(self, mem, newsize);
+}
+
+#define allocate_type(allocator, typ) (allocator_allocate(allocator, sizeof(typ)))
 
 #ifdef __cplusplus
 }
