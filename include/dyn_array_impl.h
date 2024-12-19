@@ -29,9 +29,9 @@ dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
     }
     dyn_array_type_name newarr = creation_result.array;
 
-    error_t err = data_buffer_copy_from(newarr._data, data, count * sizeof(dyn_array_element_type));
+    error_t err = data_buffer_copy_from(&newarr._data, data, count * sizeof(dyn_array_element_type));
     if (err.error) {
-        data_buffer_deallocate(newarr._data);
+        data_buffer_destroy(&newarr._data);
         return (dyn_array_result_type_name) { .error = err.error };
     }
     newarr._len = count;
@@ -73,13 +73,28 @@ error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_arra
     return E_OK;
 }
 
-void dyn_array_func(destroy)(dyn_array_type_name self)
+void dyn_array_func(destroy)(dyn_array_type_name *self)
 {
-    if (self._data.data == nullptr || self._data.allocator == nullptr) {
-        return;
-    }
+    data_buffer_destroy(&self->_data);
+}
 
-    self._data.allocator->deallocate(self._data.allocator, self._data.data);
+error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item)
+{
+    if (self == nullptr) return ERR_FROM_CODE(EINVAL);
+
+    size_t current_size = dyn_array_func(size)(*self);
+    size_t capacity = dyn_array_func(capacity)(*self);
+    if (current_size >= capacity) {
+        error_t resize_status = data_buffer_resize(&(self->_data),
+                                                   self->_data.length * 2);
+        if (resize_status.error) {
+            return resize_status;
+        }
+    }
+    data_buffer_element_at(self->_data, dyn_array_element_type, current_size) = item;
+    current_size++;
+
+    return E_OK;
 }
 
 typedef struct {

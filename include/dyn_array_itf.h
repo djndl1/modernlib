@@ -52,7 +52,9 @@ dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name sel
 
 error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value);
 
-void dyn_array_func(destroy)(dyn_array_type_name self);
+void dyn_array_func(destroy)(dyn_array_type_name *self);
+
+error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item);
 
 static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_name *self)
 {

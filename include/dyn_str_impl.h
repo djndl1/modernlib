@@ -19,7 +19,7 @@ static dyn_string_result_type_name _create_dyn_str_from_data(const void *data,
     dyn_string_internal_array_type arr = arr_result.array;
     error_t err = dyn_string_internal_array_func(set)(arr, count, 0);
     if (err.error) {
-        dyn_string_internal_array_func(destroy)(arr);
+        dyn_string_internal_array_func(destroy)(&arr);
         return (dyn_string_result_type_name){ .error = err.error };
     }
 
@@ -73,5 +73,5 @@ int dyn_string_func(compare)(const dyn_string_type_name self, const dyn_string_t
 
 void dyn_string_func(destroy)(dyn_string_type_name self)
 {
-    dyn_string_internal_array_func(destroy)(self._char_array);
+    dyn_string_internal_array_func(destroy)(&self._char_array);
 }

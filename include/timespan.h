@@ -54,110 +54,110 @@ static inline timespan timespan_from_ticks(int64_t ticks)
     return (timespan){ ._ticks = ticks };
 }
 
-static inline timespan timespan_add(timespan self, timespan b)
+static inline timespan timespan_add(const timespan self, const timespan b)
 {
     return (timespan){ ._ticks = self._ticks + b._ticks };
 }
 
-static inline timespan timespan_minus(timespan self, timespan b)
+static inline timespan timespan_minus(const timespan self, const timespan b)
 {
     return (timespan){ ._ticks = self._ticks - b._ticks };
 }
 
-static inline timespan timespanimes(timespan self, double factor)
+static inline timespan timespanimes(const timespan self, double factor)
 {
     return (timespan){ ._ticks = self._ticks * factor };
 }
 
-static inline timespan timespan_divided_by(timespan self, double factor)
+static inline timespan timespan_divided_by(const timespan self, double factor)
 {
     return (timespan){ ._ticks = (double)self._ticks / factor };
 }
 
-static inline timespan timespan_negative(timespan self)
+static inline timespan timespan_negative(const timespan self)
 {
     return (timespan){ ._ticks = -self._ticks };
 }
 
-static inline int timespan_compare(timespan self, timespan other)
+static inline int timespan_compare(const timespan self, const timespan other)
 {
     return self._ticks == other._ticks ? 0
         : (self._ticks < other._ticks ? -1 : 1);
 }
 
-static inline int64_t timespanicks(timespan ts)
+static inline int64_t timespan_ticks(const timespan ts)
 {
     return ts._ticks;
 }
 
-static inline int timespan_day_part(timespan ts)
+static inline int timespan_day_part(const timespan ts)
 {
     return ts._ticks / TS_TICKS_PER_DAY;
 }
 
-static inline int timespan_hour_part(timespan ts)
+static inline int timespan_hour_part(const timespan ts)
 {
     return (ts._ticks % TS_TICKS_PER_DAY) / TS_TICKS_PER_HOUR;
 }
 
-static inline int timespan_minute_part(timespan ts)
+static inline int timespan_minute_part(const timespan ts)
 {
     return (ts._ticks % TS_TICKS_PER_HOUR) / TS_TICKS_PER_MINUTE;
 }
 
-static inline int timespan_second_part(timespan ts)
+static inline int timespan_second_part(const timespan ts)
 {
     return (ts._ticks % TS_TICKS_PER_MINUTE) / TS_TICKS_PER_SECOND;
 }
 
-static inline int timespan_millisecond_part(timespan ts)
+static inline int timespan_millisecond_part(const timespan ts)
 {
     return (ts._ticks % TS_TICKS_PER_SECOND) / TS_TICKS_PER_MILLISECOND;
 }
 
-static inline int timespan_microsecond_part(timespan ts)
+static inline int timespan_microsecond_part(const timespan ts)
 {
     return (ts._ticks % TS_TICKS_PER_MILLISECOND) / TS_TICKS_PER_MICROSECOND;
 }
 
-static inline timespan timespan_duration(timespan ts)
+static inline timespan timespan_duration(const timespan ts)
 {
     return (timespan) { ._ticks = imaxabs(ts._ticks) };
 }
 
-static inline double timespan_as_microseconds(timespan ts)
+static inline double timespan_as_microseconds(const timespan ts)
 {
     return (double)ts._ticks / TS_TICKS_PER_MICROSECOND;
 }
 
-static inline double timespan_as_milliseconds(timespan ts)
+static inline double timespan_as_milliseconds(const timespan ts)
 {
     return (double)ts._ticks / TS_TICKS_PER_MILLISECOND;
 }
 
-static inline double timespan_as_seconds(timespan ts)
+static inline double timespan_as_seconds(const timespan ts)
 {
     return (double)ts._ticks / TS_TICKS_PER_SECOND;
 }
 
-static inline double timespan_as_nanoseconds(timespan ts)
+static inline double timespan_as_nanoseconds(const timespan ts)
 {
     return (double)ts._ticks * TS_TICK_RESOLUTION;
 }
 
-static inline struct timespec timespan_as_timespec(timespan ts)
+static inline struct timespec timespan_as_timespec(const timespan ts)
 {
     time_t secs = ts._ticks / TS_TICKS_PER_SECOND;
     unsigned long nsecs = (ts._ticks % TS_TICKS_PER_SECOND) * TS_TICK_RESOLUTION;
     return (struct timespec) { .tv_sec = secs, .tv_nsec = nsecs };
 }
 
-static inline clock_t timespan_as_clock(timespan ts)
+static inline clock_t timespan_as_clock(const timespan ts)
 {
     return CLOCKS_PER_SEC * timespan_as_seconds(ts);
 }
 
-static inline struct timeval timespan_as_timeval(timespan ts)
+static inline struct timeval timespan_as_timeval(const timespan ts)
 {
     time_t secs = ts._ticks / TS_TICKS_PER_SECOND;
     unsigned long usecs = (ts._ticks % TS_TICKS_PER_SECOND) / TS_TICKS_PER_MICROSECOND;
