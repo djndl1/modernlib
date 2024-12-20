@@ -56,6 +56,18 @@ void dyn_array_func(destroy)(dyn_array_type_name *self);
 
 error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item);
 
+error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
+
+typedef struct find_array_index_result {
+    bool found;
+    size_t index;
+} find_array_index_result;
+
+find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
+                                                      const dyn_array_element_type item,
+                                                      int (*comparer)(const dyn_array_element_type, const dyn_array_element_type),
+                                                      size_t start);
+
 static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_name *self)
 {
     if (self == nullptr) return nullptr;

@@ -51,6 +51,11 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
     return dyn_array_func(from_buffer)(other._data, allocator);
 }
 
+static dyn_array_element_type dyn_array_func(get_direct)(const dyn_array_type_name self, size_t idx)
+{
+    return data_buffer_element_at(self._data, dyn_array_element_type, idx);
+}
+
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
 {
     if (idx >= dyn_array_func(size)(self)) {
@@ -59,7 +64,7 @@ dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name sel
 
 
     return (dyn_array_get_result_type_name){
-        .element = data_buffer_element_at(self._data, dyn_array_element_type, idx),
+        .element = dyn_array_func(get_direct)(self, idx),
     };
 }
 
@@ -82,19 +87,52 @@ error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type
 {
     if (self == nullptr) return ERR_FROM_CODE(EINVAL);
 
-    size_t current_size = dyn_array_func(size)(*self);
     size_t capacity = dyn_array_func(capacity)(*self);
-    if (current_size >= capacity) {
+    if (self->_len >= capacity) {
         error_t resize_status = data_buffer_resize(&(self->_data),
                                                    self->_data.length * 2);
         if (resize_status.error) {
             return resize_status;
         }
     }
-    data_buffer_element_at(self->_data, dyn_array_element_type, current_size) = item;
-    current_size++;
+    data_buffer_element_at(self->_data, dyn_array_element_type, self->_len) = item;
+    self->_len++;
 
     return E_OK;
+}
+
+error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*))
+{
+    if (self == nullptr) return ERR_FROM_CODE(EINVAL);
+
+    if (destructor != nullptr) {
+        for (size_t i = 0; i < self->_len; i++) {
+            destructor(&data_buffer_element_at(self->_data,
+                                               dyn_array_element_type,
+                                               i));
+        }
+    }
+
+    self->_len = 0;
+    return E_OK;
+}
+
+find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
+                                                      const dyn_array_element_type item,
+                                                      int (*comparer)(const dyn_array_element_type, const dyn_array_element_type),
+                                                      size_t start)
+{
+    if (start >= self._len) {
+        return (find_array_index_result){ .found = false };
+    }
+
+    for (size_t i = start; i < self._len; i++) {
+        dyn_array_element_type cur = dyn_array_func(get_direct)(self, i);
+        if (comparer(cur, item) == 0) {
+            return (find_array_index_result){ .found = true, .index = i };
+        }
+    }
+    return (find_array_index_result){ .found = false };
 }
 
 typedef struct {
