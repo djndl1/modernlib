@@ -51,10 +51,9 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
     return dyn_array_func(from_buffer)(other._data, allocator);
 }
 
-static dyn_array_element_type dyn_array_func(get_direct)(const dyn_array_type_name self, size_t idx)
-{
-    return data_buffer_element_at(self._data, dyn_array_element_type, idx);
-}
+#define dyn_array_get_direct(self, idx) \
+    data_buffer_element_at(self._data, dyn_array_element_type, idx)
+
 
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
 {
@@ -64,7 +63,7 @@ dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name sel
 
 
     return (dyn_array_get_result_type_name){
-        .element = dyn_array_func(get_direct)(self, idx),
+        .element = dyn_array_get_direct(self, idx),
     };
 }
 
@@ -74,7 +73,7 @@ error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_arra
         return ERR_FROM_CODE(ERANGE);
     }
 
-    data_buffer_element_at(self._data, dyn_array_element_type, idx) = value;
+    dyn_array_get_direct(self, idx) = value;
     return E_OK;
 }
 
@@ -95,7 +94,7 @@ error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type
             return resize_status;
         }
     }
-    data_buffer_element_at(self->_data, dyn_array_element_type, self->_len) = item;
+    dyn_array_get_direct((*self), self->_len) = item;
     self->_len++;
 
     return E_OK;
@@ -107,9 +106,7 @@ error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_
 
     if (destructor != nullptr) {
         for (size_t i = 0; i < self->_len; i++) {
-            destructor(&data_buffer_element_at(self->_data,
-                                               dyn_array_element_type,
-                                               i));
+            destructor(&dyn_array_get_direct((*self), i));
         }
     }
 
@@ -127,7 +124,7 @@ find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name 
     }
 
     for (size_t i = start; i < self._len; i++) {
-        dyn_array_element_type cur = dyn_array_func(get_direct)(self, i);
+        dyn_array_element_type cur = dyn_array_get_direct(self, i);
         if (comparer(cur, item) == 0) {
             return (find_array_index_result){ .found = true, .index = i };
         }
