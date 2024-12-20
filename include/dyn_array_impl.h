@@ -54,6 +54,8 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
 #define dyn_array_get_direct(self, idx) \
     data_buffer_element_at(self._data, dyn_array_element_type, idx)
 
+#define dyn_array_get_directp(pself, idx) \
+    data_buffer_element_at(self->_data, dyn_array_element_type, idx)
 
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
 {
@@ -94,7 +96,7 @@ error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type
             return resize_status;
         }
     }
-    dyn_array_get_direct((*self), self->_len) = item;
+    dyn_array_get_directp(self, self->_len) = item;
     self->_len++;
 
     return E_OK;
@@ -106,7 +108,7 @@ error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_
 
     if (destructor != nullptr) {
         for (size_t i = 0; i < self->_len; i++) {
-            destructor(&dyn_array_get_direct((*self), i));
+            destructor(&dyn_array_get_directp(self, i));
         }
     }
 
