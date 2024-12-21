@@ -72,7 +72,7 @@ dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name sel
 error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value)
 {
     if (idx >= dyn_array_func(size)(self)) {
-        return ERR_FROM_CODE(ERANGE);
+        return E_INVALID_ARGS;
     }
 
     dyn_array_get_direct(self, idx) = value;
@@ -84,27 +84,30 @@ void dyn_array_func(destroy)(dyn_array_type_name *self)
     data_buffer_destroy(&self->_data);
 }
 
-error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item)
+error_t dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity)
 {
-    if (self == nullptr) return ERR_FROM_CODE(EINVAL);
+    size_t cur_capacity = dyn_array_func(capacity)(*self);
+    if (capacity > cur_capacity) {
+        size_t newsize = cur_capacity == 0
+            ? sizeof(dyn_array_element_type) * capacity
+            : (capacity / cur_capacity + 1) * self->_data.length;
+        error_t resize_status = data_buffer_resize(&(self->_data), newsize);
 
-    size_t capacity = dyn_array_func(capacity)(*self);
-    if (self->_len >= capacity) {
-        error_t resize_status = data_buffer_resize(&(self->_data),
-                                                   self->_data.length * 2);
         if (resize_status.error) {
             return resize_status;
         }
     }
-    dyn_array_get_directp(self, self->_len) = item;
-    self->_len++;
-
     return E_OK;
+}
+
+error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item)
+{
+    return dyn_array_func(insert)(self, self->_len, item);
 }
 
 error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*))
 {
-    if (self == nullptr) return ERR_FROM_CODE(EINVAL);
+    if (self == nullptr) return E_INVALID_ARGS;
 
     if (destructor != nullptr) {
         for (size_t i = 0; i < self->_len; i++) {
@@ -114,6 +117,68 @@ error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_
 
     self->_len = 0;
     return E_OK;
+}
+
+error_t dyn_array_func(remove_at)(dyn_array_type_name *self, size_t idx, void (*destructor)(dyn_array_element_type*))
+{
+    if (self == nullptr) return E_INVALID_ARGS;
+    if (idx >= self->_len) return E_OUT_OF_RANGE;
+
+    if (destructor != nullptr) {
+        destructor(&dyn_array_get_directp(self, idx));
+    }
+    size_t remaining_count_after = self->_len - 1 - idx;
+    if (remaining_count_after > 0) {
+        memmove(&dyn_array_get_directp(self, idx),
+                &dyn_array_get_directp(self, idx + 1),
+                remaining_count_after * sizeof(dyn_array_element_type));
+    }
+    self->_len--;
+    return E_OK;
+}
+
+error_t dyn_array_func(insert)(dyn_array_type_name *self,
+                               size_t idx,
+                               const dyn_array_element_type item)
+{
+    if (self == nullptr) return E_INVALID_ARGS;
+    if (idx > self->_len) return E_OUT_OF_RANGE;
+
+    error_t err = dyn_array_func(ensure_capacity)(self, self->_len + 1);
+    if (err.error) {
+        return err;
+    }
+
+    size_t count_after = self->_len - idx;
+    if (count_after > 0) {
+        memmove(&dyn_array_get_directp(self, idx + 1),
+                &dyn_array_get_directp(self, idx),
+                count_after * sizeof(dyn_array_element_type));
+    }
+    dyn_array_get_directp(self, idx) = item;
+    self->_len++;
+
+    return E_OK;
+}
+
+bool dyn_array_func(remove)(dyn_array_type_name *self,
+                            const dyn_array_element_type item,
+                            int (*comparer)(const dyn_array_element_type, const dyn_array_element_type),
+                            void (*destructor)(dyn_array_element_type*))
+{
+    if (self == nullptr) return false;
+
+    find_array_index_result find_result = dyn_array_func(find_index_of)(*self, item, comparer, 0);
+    if (!find_result.found) {
+        return false;
+    }
+
+    error_t err = dyn_array_func(remove_at)(self, find_result.index, destructor);
+    if (err.error) {
+        return false;
+    }
+
+    return true;
 }
 
 find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
@@ -132,6 +197,15 @@ find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name 
         }
     }
     return (find_array_index_result){ .found = false };
+}
+
+bool dyn_array_func(contains)(const dyn_array_type_name self,
+                              const dyn_array_element_type item,
+                              int (*comparer)(const dyn_array_element_type, const dyn_array_element_type))
+{
+    find_array_index_result idx_result = dyn_array_func(find_index_of)(self, item, comparer, 0);
+
+    return idx_result.found;
 }
 
 typedef struct {

@@ -52,7 +52,7 @@ void data_buffer_destroy(data_buffer *buf)
 error_t data_buffer_resize(data_buffer *self, size_t newsize)
 {
     if (self->allocator == nullptr || self->allocator->reallocate == nullptr) {
-        return ERR_FROM_CODE(E_INVALID_OP);
+        return E_INVALID_OPERATION;
     }
 
     mem_alloc_result r = allocator_reallocate(self->allocator, self->data, newsize);
@@ -95,11 +95,11 @@ error_t data_buffer_copy_to(const data_buffer self, data_buffer *target)
 {
     if (self.data == nullptr || self.length == 0
          || target == nullptr || target->data == nullptr || target->length == 0) {
-        return ERR_FROM_CODE(EINVAL);
+        return E_INVALID_ARGS;
     }
 
     if (buffers_overlapping(self, *target)) {
-        return ERR_FROM_CODE(E_OVERLAP_MEM);
+        return E_OVERLAPPING_MEMORY;
     }
 
     size_t l = MIN(self.length, target->length);
@@ -111,7 +111,7 @@ error_t data_buffer_copy_to(const data_buffer self, data_buffer *target)
 
 error_t data_buffer_copy_from(data_buffer *self, const void *data, size_t byte_count)
 {
-    if (self == nullptr) return ERR_FROM_CODE(EINVAL);
+    if (self == nullptr) return E_INVALID_ARGS;
 
     const data_buffer temp_buf = (data_buffer){ .data = (void*)data, .length = byte_count, .allocator = self->allocator };
     return data_buffer_copy_to(temp_buf, self);

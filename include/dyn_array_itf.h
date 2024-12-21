@@ -79,6 +79,32 @@ static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_nam
     return pointer;
 }
 
+error_t dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity);
+
+find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
+                                                      const dyn_array_element_type item,
+                                                      int (*comparer)(const dyn_array_element_type, const dyn_array_element_type),
+                                                      size_t start);
+
+bool dyn_array_func(contains)(const dyn_array_type_name self,
+                              const dyn_array_element_type item,
+                              int (*comparer)(const dyn_array_element_type, const dyn_array_element_type));
+
+error_t dyn_array_func(remove_at)(dyn_array_type_name *self,
+                                  size_t idx,
+                                  void (*destructor)(dyn_array_element_type*));
+
+bool dyn_array_func(remove)(dyn_array_type_name *self,
+                            const dyn_array_element_type item,
+                            int (*comparer)(const dyn_array_element_type, const dyn_array_element_type),
+                            void (*destructor)(dyn_array_element_type*));
+
+error_t dyn_array_func(insert)(dyn_array_type_name *self,
+                               size_t idx,
+                               const dyn_array_element_type item);
+
+error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
+
 static inline dyn_array_element_type *dyn_array_func(get_data)(dyn_array_type_name self)
 {
     return self._data.data;
