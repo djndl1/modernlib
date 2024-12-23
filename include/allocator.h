@@ -54,7 +54,9 @@ static inline mem_alloc_result allocator_reallocate(const mem_allocator *const s
     return self->reallocate(self, mem, newsize);
 }
 
-#define allocate_type(allocator, typ) (allocator_allocate(allocator, sizeof(typ)))
+#define allocate_n_item(allocator, n, item_size) (allocator_allocate(allocator, n * item_size))
+#define allocate_type(allocator, typ) allocate_n_item(allocator, 1, sizeof(typ))
+#define allocate_typed_array(allocator, typ, item_count) allocate_n_item(allocator, item_count, sizeof(typ))
 
 #ifdef __cplusplus
 }
