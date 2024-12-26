@@ -32,18 +32,25 @@ typedef struct buffer_alloc_result {
     data_buffer buffer;
 } buffer_alloc_result;
 
+MODERNLIB_PUBLIC
 bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t count);
 
+MODERNLIB_PUBLIC
 error_t data_buffer_resize(data_buffer *self, size_t newsize);
 
+MODERNLIB_PUBLIC
 error_t data_buffer_copy_to(const data_buffer, data_buffer*);
 
+MODERNLIB_PUBLIC
 error_t data_buffer_copy_from(data_buffer *self, const void *data, size_t byte_count);
 
+MODERNLIB_PUBLIC
 buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator);
 
+MODERNLIB_PUBLIC
 buffer_alloc_result std_allocate_buffer(size_t);
 
+MODERNLIB_PUBLIC
 void data_buffer_destroy(data_buffer*);
 
 

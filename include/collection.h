@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include "interface.h"
+#include "internal/compilers.h"
 
 struct collection_obj;
 
@@ -15,6 +16,7 @@ typedef struct collection_obj {
     const collection_itf *itf;
 } collection_obj;
 
+MODERNLIB_ALWAYS_INLINE
 static inline collection_obj collection_new(const mem_allocator *allocator,
                                             const collection_itf *itf)
 {
@@ -24,6 +26,7 @@ static inline collection_obj collection_new(const mem_allocator *allocator,
     };
 }
 
+MODERNLIB_ALWAYS_INLINE
 static inline size_t collection_count(const struct collection_obj* self)
 {
     return self->itf->count(self);

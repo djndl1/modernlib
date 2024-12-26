@@ -8,6 +8,7 @@ extern "C" {
 #include <stddef.h>
 #include <errno.h>
 #include "basis.h"
+#include "internal/compilers.h"
 
 typedef struct mem_alloc_result {
     int error;
@@ -25,8 +26,10 @@ struct mem_allocator {
     mem_alloc_result (*reallocate)(const mem_allocator *const self, void *mem, size_t newsize);
 };
 
+MODERNLIB_PUBLIC
 extern const mem_allocator *const std_allocator;
 
+MODERNLIB_ALWAYS_INLINE
 static inline mem_alloc_result allocator_allocate(const mem_allocator *self, size_t count)
 {
     if (self == nullptr || self->allocate != nullptr) {
@@ -36,6 +39,7 @@ static inline mem_alloc_result allocator_allocate(const mem_allocator *self, siz
 }
 
 
+MODERNLIB_ALWAYS_INLINE
 static inline void allocator_deallocate(const mem_allocator *const self, void *mem)
 {
     if (self == nullptr || self->deallocate != nullptr) {
@@ -45,6 +49,7 @@ static inline void allocator_deallocate(const mem_allocator *const self, void *m
     return self->deallocate(self, mem);
 }
 
+MODERNLIB_ALWAYS_INLINE
 static inline mem_alloc_result allocator_reallocate(const mem_allocator *const self, void *mem, size_t newsize)
 {
     if (self == nullptr || self->reallocate != nullptr) {
