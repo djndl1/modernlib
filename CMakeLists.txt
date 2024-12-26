@@ -20,10 +20,10 @@ set(libsrc
 add_library(modernlib SHARED
   ${libsrc}
 )
-target_compile_options(modernlib MODERNLIB_SHARED_BUILD)
+target_compile_definitions(modernlib PRIVATE MODERNLIB_SHARED_BUILD)
 
 set_target_properties(modernlib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 add_library(modernlib_static STATIC
   ${libsrc}
 )
-target_compile_options(modernlib_static MODERNLIB_STATIC_BUILD)
+target_compile_definitions(modernlib_static PRIVATE MODERNLIB_STATIC_BUILD)
