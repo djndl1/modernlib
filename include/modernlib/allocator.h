@@ -1,5 +1,5 @@
-#ifndef ALLOCATOR_H_
-#define ALLOCATOR_H_
+#ifndef MODERNLIB_ALLOCATOR_H_
+#define MODERNLIB_ALLOCATOR_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -7,8 +7,8 @@ extern "C" {
 
 #include <stddef.h>
 #include <errno.h>
-#include "basis.h"
-#include "internal/compilers.h"
+#include "modernlib/basis.h"
+#include "modernlib/internal/compilers.h"
 
 typedef struct mem_alloc_result {
     int error;

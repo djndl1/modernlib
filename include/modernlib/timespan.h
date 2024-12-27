@@ -1,5 +1,5 @@
-#ifndef TIMESPAN_H_
-#define TIMESPAN_H_
+#ifndef MODERNLIB_TIMESPAN_H_
+#define MODERNLIB_TIMESPAN_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include "internal/compilers.h"
+#include "modernlib/internal/compilers.h"
 
 #ifdef _MSC_VER
 #include <winsock.h>

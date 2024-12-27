@@ -1,8 +1,8 @@
-#include "allocator.h"
+#include "modernlib/allocator.h"
 
 #include <stdlib.h>
 #include <errno.h>
-#include "basis.h"
+#include "modernlib/basis.h"
 
 mem_alloc_result std_allocator_func(const mem_allocator *const self, size_t count)
 {

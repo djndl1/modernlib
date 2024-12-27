@@ -1,7 +1,7 @@
-#ifndef UTIL_H_
-#define UTIL_H_
+#ifndef MODERNLIB_UTIL_H_
+#define MODERNLIB_UTIL_H_
 
-#include "nullptr.h"
+#include "modernlib/nullptr.h"
 #include <stdint.h>
 #include <stdbool.h>
 

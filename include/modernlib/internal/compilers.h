@@ -1,5 +1,5 @@
-#ifndef _COMPILERS_H_
-#define _COMPILERS_H_
+#ifndef MODERNLIB_COMPILERS_H_
+#define MODERNLIB_COMPILERS_H_
 
 #ifdef __GNUC__
 #define MODERNLIB_ALWAYS_INLINE __attribute__ ((always_inline))
@@ -23,4 +23,4 @@
 #  define MODERNLIB_PUBLIC
 #endif
 
-#endif // _COMPILERS_H_
+#endif // MODERNLIB_COMPILERS_H_

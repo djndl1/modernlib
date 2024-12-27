@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "dyn_char_array.h"
+#include "modernlib/dyn_char_array.h"
 
 #undef dyn_string_internal_array_type
 #define dyn_string_internal_array_type dyn_char_array

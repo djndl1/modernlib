@@ -17,9 +17,9 @@
 #error "internal array type function composed used by string is not defined"
 #endif
 
-#include "allocator.h"
-#include "internal/compilers.h"
-#include "dyn_str_macro.h"
+#include "modernlib/allocator.h"
+#include "modernlib/internal/compilers.h"
+#include "modernlib/dyn_str_macro.h"
 
 typedef struct dyn_string_type_name {
     dyn_string_internal_array_type _char_array;

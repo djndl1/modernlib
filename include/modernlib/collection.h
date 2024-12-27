@@ -1,9 +1,9 @@
-#ifndef COLLECTION_H_
-#define COLLECTION_H_
+#ifndef MODERNLIB_COLLECTION_H_
+#define MODERNLIB_COLLECTION_H_
 
 #include <stddef.h>
-#include "interface.h"
-#include "internal/compilers.h"
+#include "modernlib/interface.h"
+#include "modernlib/internal/compilers.h"
 
 struct collection_obj;
 

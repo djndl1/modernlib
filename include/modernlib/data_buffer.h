@@ -1,5 +1,5 @@
-#ifndef BUFFER_H_
-#define BUFFER_H_
+#ifndef MODERNLIB_BUFFER_H_
+#define MODERNLIB_BUFFER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,8 +10,8 @@ extern "C" {
 
 #include <stdbool.h>
 #include "basis.h"
-#include "errors.h"
-#include "allocator.h"
+#include "modernlib/errors.h"
+#include "modernlib/allocator.h"
 
 typedef struct data_buffer {
     void *data;

@@ -1,6 +1,6 @@
-#include "allocator.h"
+#include "modernlib/allocator.h"
 
-#include "dyn_str_macro.h"
+#include "modernlib/dyn_str_macro.h"
 
 #include <string.h>
 #include <wchar.h>

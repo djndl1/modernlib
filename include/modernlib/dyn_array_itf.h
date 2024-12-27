@@ -2,13 +2,13 @@
 #error "dynamic array type or dynamic array name not defined!"
 #endif
 
-#include "data_buffer.h"
-#include "allocator.h"
-#include "basis.h"
-#include "collection.h"
-#include "internal/compilers.h"
+#include "modernlib/data_buffer.h"
+#include "modernlib/allocator.h"
+#include "modernlib/basis.h"
+#include "modernlib/collection.h"
+#include "modernlib/internal/compilers.h"
 
-#include "dyn_array_macro.h"
+#include "modernlib/dyn_array_macro.h"
 
 typedef struct dyn_array_type_name {
     data_buffer _data;
@@ -86,7 +86,7 @@ static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_nam
 {
     if (self == nullptr) return nullptr;
 
-    dyn_array_element_type *pointer = self->_data.data;
+    dyn_array_element_type *pointer = (dyn_array_element_type*)self->_data.data;
     self->_data.data = nullptr;
     self->_len = 0;
 
@@ -129,7 +129,7 @@ error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_
 MODERNLIB_ALWAYS_INLINE
 static inline dyn_array_element_type *dyn_array_func(get_data)(dyn_array_type_name self)
 {
-    return self._data.data;
+    return (dyn_array_element_type*)self._data.data;
 }
 
 MODERNLIB_PUBLIC

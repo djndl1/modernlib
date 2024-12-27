@@ -1,9 +1,9 @@
-#include "data_buffer.h"
+#include "modernlib/data_buffer.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "errors.h"
+#include "modernlib/errors.h"
 
 
 buffer_alloc_result std_allocate_buffer(size_t count)

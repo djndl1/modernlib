@@ -1,5 +1,5 @@
-#ifndef ERRORS_H_
-#define ERRORS_H_
+#ifndef MODERNLIB_ERRORS_H_
+#define MODERNLIB_ERRORS_H_
 
 #include <errno.h>
 

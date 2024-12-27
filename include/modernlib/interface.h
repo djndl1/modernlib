@@ -1,9 +1,9 @@
-#ifndef INTERFACE_H_
-#define INTERFACE_H_
+#ifndef MODERNLIB_INTERFACE_H_
+#define MODERNLIB_INTERFACE_H_
 
-#include "allocator.h"
-#include "basis.h"
-#include "internal/compilers.h"
+#include "modernlib/allocator.h"
+#include "modernlib/basis.h"
+#include "modernlib/internal/compilers.h"
 
 #define interface_self(itf) (itf.self)
 #define interface_impl(itf, impl) CONCAT(impl, CONCAT(_impl_, itf))

@@ -1,8 +1,8 @@
-#include "data_buffer.h"
-#include "errors.h"
+#include "modernlib/data_buffer.h"
+#include "modernlib/errors.h"
 #include <errno.h>
 
-#include "dyn_array_macro.h"
+#include "modernlib/dyn_array_macro.h"
 #include <string.h>
 
 dyn_array_result_type_name dyn_array_func(of_capacity)(size_t capacity,

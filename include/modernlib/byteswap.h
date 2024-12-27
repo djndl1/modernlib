@@ -1,5 +1,5 @@
-#ifndef BYTESWAP_H_
-#define BYTESWAP_H_
+#ifndef MODERNLIB_BYTESWAP_H_
+#define MODERNLIB_BYTESWAP_H_
 
 /* byteswap.h - Byte swapping
    Copyright (C) 2005, 2007, 2009-2024 Free Software Foundation, Inc.

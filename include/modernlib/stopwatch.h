@@ -1,9 +1,9 @@
-#ifndef STOPWATCH_H_
-#define STOPWATCH_H_
+#ifndef MODERNLIB_STOPWATCH_H_
+#define MODERNLIB_STOPWATCH_H_
 
-#include "timespan.h"
+#include "modernlib/timespan.h"
 #include <time.h>
-#include "internal/compilers.h"
+#include "modernlib/internal/compilers.h"
 
 #ifdef __cplusplus
 extern "C" {
