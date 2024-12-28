@@ -3,11 +3,10 @@
 
 #include "modernlib/internal/compilers.h"
 
-#if MODERLIB_USE_INLINE
-#define MODERNLIB_INLINE ALWAYS_INLINE
-#else
-#define MODERNLIB_INLINE
-#endif
+#define TOKENIZE(t) #t
+#define _CONCAT(a, b) a##b
+#define CONCAT(a, b) _CONCAT(a, b)
+#define INTERNAL_VAR(v) CONCAT(v, __LINE__)
 
 
 #endif // MODERNLIB_MACROS_H_

@@ -27,3 +27,6 @@ add_library(modernlib_static STATIC
   ${libsrc}
 )
 target_compile_definitions(modernlib_static PRIVATE MODERNLIB_STATIC_BUILD)
+
+enable_testing()
+subdirs(test)
