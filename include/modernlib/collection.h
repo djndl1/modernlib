@@ -20,10 +20,12 @@ MODERNLIB_ALWAYS_INLINE
 static inline collection_obj collection_new(const mem_allocator *allocator,
                                             const collection_itf *itf)
 {
-    return (collection_obj){
-        .base = (interface_base){ allocator },
-        .itf = itf,
-    };
+    collection_obj obj;
+    interface_base base = { allocator };
+    obj.base = base;
+    obj.itf = itf;
+
+    return obj;
 }
 
 MODERNLIB_ALWAYS_INLINE

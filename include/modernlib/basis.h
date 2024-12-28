@@ -12,7 +12,12 @@ typedef struct {
     int error;
 } error_t;
 
-#define ERR_FROM_CODE(e) ((error_t) { .error = e })
+#ifdef __cplusplus
+#  define ERR_FROM_CODE(e) (error_t{ e })
+#else
+#  define ERR_FROM_CODE(e) ((error_t) { .error = e })
+#endif
+
 #define E_OK ERR_FROM_CODE(0)
 
 #define MIN(a, b) (((a) > (b)) ? (b) : (a))

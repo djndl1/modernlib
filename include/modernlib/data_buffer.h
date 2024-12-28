@@ -20,8 +20,12 @@ typedef struct data_buffer {
     const mem_allocator *allocator;
 } data_buffer;
 
-#define DATA_BUFFER_TRANSIENT(dat, len) \
+#ifdef __cplusplus
+#  define DATA_BUFFER_TRANSIENT(dat, len) data_buffer{ dat, len, nullptr }
+#else
+#  define DATA_BUFFER_TRANSIENT(dat, len) \
     ((data_buffer){ .data = dat, .length = len, .allocator = nullptr })
+#endif
 
 #define data_buffer_element_at(self, typ, idx) \
     (((typ*)self.data)[idx])

@@ -27,9 +27,15 @@ typedef struct timespan {
 #define TS_TICKS_PER_HOUR (60UL * TS_TICKS_PER_MINUTE)
 #define TS_TICKS_PER_DAY (24UL * TS_TICKS_PER_HOUR)
 
-#define TIMESPAN_ZERO ((timspan_t){ ._ticks = 0 })
-#define TIMESPAN_MIN ((timspan_t){ ._ticks = INT64_MAX })
-#define TIMESPAN_MAX ((timspan_t){ ._ticks = INT64_MIN })
+#ifdef __cplusplus
+#  define TIMESPAN_TICK(tick) timespan{ tick }
+#else
+#  define TIMESPAN_TICK(tick) ((timespan){ ._ticks = tick })
+#endif
+
+#define TIMESPAN_ZERO TIMESPAN_TICK(0)
+#define TIMESPAN_MIN TIMESPAN_TICK(INT64_MAX)
+#define TIMESPAN_MAX TIMESPAN_TICK(INT64_MIN)
 #define TIMESPAN_SECOND(n) timespan_from_ticks(n * TS_TICKS_PER_SECOND)
 #define TIMESPAN_MINUTE(n) timespan_from_ticks(n * TS_TICKS_PER_MINUTE)
 #define TIMESPAN_HOUR(n) timespan_from_ticks(n * TS_TICKS_PER_HOUR)
@@ -48,43 +54,43 @@ static inline timespan _timespan_from(int d, int h, int m, int64_t secs, int64_t
 
     int64_t ticks = dticks + hticks + mticks + secsticks + msecsticks + usecsticks;
 
-    return (timespan) { ._ticks = ticks };
+    return TIMESPAN_TICK(ticks);
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_from_ticks(int64_t ticks)
 {
-    return (timespan){ ._ticks = ticks };
+    return TIMESPAN_TICK(ticks);
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_add(const timespan self, const timespan b)
 {
-    return (timespan){ ._ticks = self._ticks + b._ticks };
+    return TIMESPAN_TICK(self._ticks + b._ticks);
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_minus(const timespan self, const timespan b)
 {
-    return (timespan){ ._ticks = self._ticks - b._ticks };
+    return TIMESPAN_TICK(self._ticks - b._ticks);
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespanimes(const timespan self, double factor)
 {
-    return (timespan){ ._ticks = self._ticks * factor };
+    return TIMESPAN_TICK(self._ticks * factor);
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_divided_by(const timespan self, double factor)
 {
-    return (timespan){ ._ticks = (double)self._ticks / factor };
+    return TIMESPAN_TICK((double)self._ticks / factor );
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_negative(const timespan self)
 {
-    return (timespan){ ._ticks = -self._ticks };
+    return TIMESPAN_TICK(-self._ticks);
 }
 
 MODERNLIB_ALWAYS_INLINE
@@ -139,7 +145,7 @@ static inline int timespan_microsecond_part(const timespan ts)
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_duration(const timespan ts)
 {
-    return (timespan) { ._ticks = imaxabs(ts._ticks) };
+    return TIMESPAN_TICK(imaxabs(ts._ticks));
 }
 
 MODERNLIB_ALWAYS_INLINE
@@ -171,7 +177,10 @@ static inline struct timespec timespan_as_timespec(const timespan ts)
 {
     time_t secs = ts._ticks / TS_TICKS_PER_SECOND;
     unsigned long nsecs = (ts._ticks % TS_TICKS_PER_SECOND) * TS_TICK_RESOLUTION;
-    return (struct timespec) { .tv_sec = secs, .tv_nsec = nsecs };
+    struct timespec tsp;
+    tsp.tv_sec = secs;
+    tsp.tv_nsec = nsecs;
+    return tsp;
 }
 
 MODERNLIB_ALWAYS_INLINE
@@ -185,7 +194,10 @@ static inline struct timeval timespan_as_timeval(const timespan ts)
 {
     time_t secs = ts._ticks / TS_TICKS_PER_SECOND;
     unsigned long usecs = (ts._ticks % TS_TICKS_PER_SECOND) / TS_TICKS_PER_MICROSECOND;
-    return (struct timeval) { .tv_sec = secs, .tv_usec = usecs };
+    struct timeval tv;
+    tv.tv_sec = secs;
+    tv.tv_usec = usecs;
+    return tv;
 }
 
 // TODO format, parsing
