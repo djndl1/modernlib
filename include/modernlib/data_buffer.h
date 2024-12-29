@@ -27,14 +27,20 @@ typedef struct data_buffer {
     ((data_buffer){ .data = dat, .length = len, .allocator = nullptr })
 #endif
 
-#define data_buffer_element_at(self, typ, idx) \
-    (((typ*)self.data)[idx])
-#define byte_buffer_at(self, idx) data_buffer_element_at(self, uint8_t, idx)
+#define byte_buffer_at(self, idx) (data_buffer_as_byte_array(self)[idx])
 
 typedef struct buffer_alloc_result {
     int error;
     data_buffer buffer;
 } buffer_alloc_result;
+
+
+MODERNLIB_ALWAYS_INLINE
+static inline uint8_t *data_buffer_as_byte_array(const data_buffer self)
+{
+    uint8_t *pointer = self.data;
+    return pointer;
+}
 
 MODERNLIB_PUBLIC
 bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t count);

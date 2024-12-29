@@ -7,6 +7,7 @@
 
 #include "modernlib/resmgmt.h"
 #include "modernlib/errors.h"
+#include "modernlib/conversions.h"
 
 typedef struct {
     int error;

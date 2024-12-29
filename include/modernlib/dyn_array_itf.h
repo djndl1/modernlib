@@ -86,7 +86,8 @@ static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_nam
 {
     if (self == nullptr) return nullptr;
 
-    dyn_array_element_type *pointer = (dyn_array_element_type*)self->_data.data;
+    dyn_array_element_type *pointer;
+    safe_ptr_cast(void*, self->_data.data, dyn_array_element_type*, pointer);
     self->_data.data = nullptr;
     self->_len = 0;
 
@@ -127,9 +128,11 @@ MODERNLIB_PUBLIC
 error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
 
 MODERNLIB_ALWAYS_INLINE
-static inline dyn_array_element_type *dyn_array_func(get_data)(dyn_array_type_name self)
+static inline dyn_array_element_type *dyn_array_func(get_data)(const dyn_array_type_name self)
 {
-    return (dyn_array_element_type*)self._data.data;
+    dyn_array_element_type *pointer;
+    safe_ptr_cast(void*, self._data.data, dyn_array_element_type*, pointer);
+    return pointer;
 }
 
 MODERNLIB_PUBLIC

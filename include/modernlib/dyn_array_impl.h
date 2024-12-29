@@ -51,11 +51,9 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
     return dyn_array_func(from_buffer)(other._data, allocator);
 }
 
-#define dyn_array_get_direct(self, idx) \
-    data_buffer_element_at(self._data, dyn_array_element_type, idx)
+#define dyn_array_get_direct(self, idx) (dyn_array_func(get_data)(self)[idx])
 
-#define dyn_array_get_directp(pself, idx) \
-    data_buffer_element_at(self->_data, dyn_array_element_type, idx)
+#define dyn_array_get_directp(pself, idx)  (dyn_array_func(get_data)(*self)[idx])
 
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
 {
@@ -215,7 +213,8 @@ typedef struct {
 
 static size_t dyn_array_func(collection_count)(const collection_obj *self)
 {
-    interface_impl(collection, dyn_array_type_name) *impl = (interface_impl(collection, dyn_array_type_name)*)self;
+    interface_impl(collection, dyn_array_type_name) *impl;
+    safe_ptr_cast(const collection_obj*, self, interface_impl(collection, dyn_array_type_name)*, impl);
 
     return dyn_array_func(size)(impl->impl);
 }
