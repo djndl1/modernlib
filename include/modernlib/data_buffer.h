@@ -38,7 +38,8 @@ typedef struct buffer_alloc_result {
 MODERNLIB_ALWAYS_INLINE
 static inline uint8_t *data_buffer_as_byte_array(const data_buffer self)
 {
-    uint8_t *pointer = self.data;
+    // uint8_t is unsigned char under the hood, no strict aliasing violation
+    uint8_t *pointer = (uint8_t*)self.data;
     return pointer;
 }
 

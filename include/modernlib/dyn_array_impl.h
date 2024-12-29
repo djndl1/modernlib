@@ -213,9 +213,12 @@ typedef struct {
 
 static size_t dyn_array_func(collection_count)(const collection_obj *self)
 {
-    interface_impl(collection, dyn_array_type_name) *impl;
-    safe_ptr_cast(const collection_obj*, self, interface_impl(collection, dyn_array_type_name)*, impl);
+    // valid cast to the implementation structure by the standard
+    interface_impl(collection, dyn_array_type_name) *impl
+        = (interface_impl(collection, dyn_array_type_name)*)self;
 
+    // a valid alias to access its `base` and `impl` members by strict aliasing rules
+    // no violation of strict aliasing
     return dyn_array_func(size)(impl->impl);
 }
 
@@ -234,5 +237,10 @@ collection_obj *dyn_array_func(as_collection)(dyn_array_type_name self, const me
     interface_impl(collection, dyn_array_type_name) *wrapper = alloc_result.mem;
     wrapper->base = collection_new(allocator, &interface_vtbl_name(collection, dyn_array_type_name));
     wrapper->impl = self;
+
+    // valid cast. Really a pointer to its first member
+    // no aliasing violation
+    // as we are not accessing the implementation structure
+    // only its first member
     return (collection_obj*)wrapper;
 }

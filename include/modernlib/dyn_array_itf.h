@@ -82,12 +82,21 @@ find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name 
                                                       size_t start);
 
 MODERNLIB_ALWAYS_INLINE
+static inline dyn_array_element_type *dyn_array_func(get_data)(const dyn_array_type_name self)
+{
+    // this cast does not violate strict aliasing:
+    //      the data there is always accessed as dyn_array_element_type
+    dyn_array_element_type *pointer = (dyn_array_element_type*)self._data.data;
+    return pointer;
+}
+
+
+MODERNLIB_ALWAYS_INLINE
 static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_name *self)
 {
     if (self == nullptr) return nullptr;
 
-    dyn_array_element_type *pointer;
-    safe_ptr_cast(void*, self->_data.data, dyn_array_element_type*, pointer);
+    dyn_array_element_type *pointer = dyn_array_func(get_data)(*self);
     self->_data.data = nullptr;
     self->_len = 0;
 
@@ -126,14 +135,6 @@ error_t dyn_array_func(insert)(dyn_array_type_name *self,
 
 MODERNLIB_PUBLIC
 error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
-
-MODERNLIB_ALWAYS_INLINE
-static inline dyn_array_element_type *dyn_array_func(get_data)(const dyn_array_type_name self)
-{
-    dyn_array_element_type *pointer;
-    safe_ptr_cast(void*, self._data.data, dyn_array_element_type*, pointer);
-    return pointer;
-}
 
 MODERNLIB_PUBLIC
 collection_obj *dyn_array_func(as_collection)(dyn_array_type_name self, const mem_allocator *allocator);
