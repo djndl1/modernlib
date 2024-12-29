@@ -113,9 +113,8 @@ error_t data_buffer_copy_from(data_buffer *self, const void *data, size_t byte_c
 {
     if (self == nullptr) return E_INVALID_ARGS;
 
-    void* pointer;
-    safe_ptr_cast(const void*, data, void*, pointer);
+    size_t l = MIN(self->length, byte_count);
+    memcpy(self->data, data, l);
 
-    const data_buffer temp_buf = (data_buffer){ .data = pointer, .length = byte_count, .allocator = self->allocator };
-    return data_buffer_copy_to(temp_buf, self);
+    return E_OK;
 }
