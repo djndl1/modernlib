@@ -32,7 +32,7 @@ extern const mem_allocator *const std_allocator;
 MODERNLIB_ALWAYS_INLINE
 static inline mem_alloc_result allocator_allocate(const mem_allocator *self, size_t count)
 {
-    if (self == nullptr || self->allocate != nullptr) {
+    if (self == nullptr || self->allocate == nullptr) {
         mem_alloc_result result;
         result.error = EINVAL;
         return result;
@@ -44,7 +44,7 @@ static inline mem_alloc_result allocator_allocate(const mem_allocator *self, siz
 MODERNLIB_ALWAYS_INLINE
 static inline void allocator_deallocate(const mem_allocator *const self, void *mem)
 {
-    if (self == nullptr || self->deallocate != nullptr) {
+    if (self == nullptr || self->deallocate == nullptr) {
         return;
     }
 
@@ -54,7 +54,7 @@ static inline void allocator_deallocate(const mem_allocator *const self, void *m
 MODERNLIB_ALWAYS_INLINE
 static inline mem_alloc_result allocator_reallocate(const mem_allocator *const self, void *mem, size_t newsize)
 {
-    if (self == nullptr || self->reallocate != nullptr) {
+    if (self == nullptr || self->reallocate == nullptr) {
         mem_alloc_result result;
         result.error = EINVAL;
         return result;
