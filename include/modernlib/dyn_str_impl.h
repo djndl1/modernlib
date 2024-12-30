@@ -71,7 +71,7 @@ int dyn_string_func(compare)(const dyn_string_type_name self, const dyn_string_t
     );
 }
 
-void dyn_string_func(destroy)(dyn_string_type_name self)
+void dyn_string_func(destroy)(dyn_string_type_name *self)
 {
-    dyn_string_internal_array_func(destroy)(&self._char_array);
+    dyn_string_internal_array_func(destroy)(&self->_char_array);
 }

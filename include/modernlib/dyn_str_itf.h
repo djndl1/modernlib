@@ -43,7 +43,13 @@ static inline dyn_string_character_type dyn_string_func(at)(const dyn_string_typ
 }
 
 MODERNLIB_PUBLIC
-dyn_string_result_type_name dyn_string_func(from)(dyn_string_type_name str, const mem_allocator *allocator);
+dyn_string_result_type_name dyn_string_func(from)(const dyn_string_type_name str, const mem_allocator *allocator);
+
+MODERNLIB_ALWAYS_INLINE
+dyn_string_result_type_name dyn_string_func(duplicate)(const dyn_string_type_name str)
+{
+    return dyn_string_func(from)(str, str._char_array._data.allocator);
+}
 
 MODERNLIB_PUBLIC
 dyn_string_result_type_name dyn_string_func(from_buffer)(const data_buffer buf, const mem_allocator *allocator);
@@ -92,4 +98,4 @@ static inline dyn_string_character_type *dyn_string_func(release)(dyn_string_typ
 }
 
 MODERNLIB_PUBLIC
-void dyn_string_func(destroy)(dyn_string_type_name self);
+void dyn_string_func(destroy)(dyn_string_type_name *self);
