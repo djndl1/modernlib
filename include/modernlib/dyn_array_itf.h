@@ -70,11 +70,6 @@ error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type
 MODERNLIB_PUBLIC
 error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
 
-typedef struct find_array_index_result {
-    bool found;
-    size_t index;
-} find_array_index_result;
-
 MODERNLIB_PUBLIC
 find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
                                                       const dyn_array_element_type item,

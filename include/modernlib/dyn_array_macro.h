@@ -1,6 +1,8 @@
 #ifndef DYN_ARRAY_MACRO_H_
 #define DYN_ARRAY_MACRO_H_
 
+#include "modernlib/basis.h"
+
 #undef dyn_array_result_type_name
 #define dyn_array_result_type_name CONCAT(dyn_array_type_name, _result)
 #undef dyn_array_func
@@ -8,7 +10,9 @@
 #undef dyn_array_get_result_type_name
 #define dyn_array_get_result_type_name CONCAT(dyn_array_type_name, _get_result)
 
-
-
+typedef struct find_array_index_result {
+    bool found;
+    size_t index;
+} find_array_index_result;
 
 #endif // DYN_ARRAY_MACRO_H_
