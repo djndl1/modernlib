@@ -36,9 +36,20 @@ dyn_string_result_type_name dyn_string_func(from_buffer)(const data_buffer buf,
             .error = EINVAL,
         };
     }
-    size_t l = buf.length / sizeof(dyn_string_character_type);
+    uint8_t *bytes = data_buffer_as_byte_array(buf);
+    // but there might be embedding NUL
+    size_t string_len = 0;
+    for (size_t i = 0; i < buf.length; i += sizeof(dyn_string_character_type)) {
+        dyn_string_character_type ch;
+        // memcpy for safe type punning in case the source data is not of the character type
+        memcpy(&ch, &bytes[i], sizeof(dyn_string_character_type));
+        if (ch == 0) {
+            break;
+        }
+        string_len++;
+    }
 
-    return _create_dyn_str_from_data(buf.data, l, allocator);
+    return _create_dyn_str_from_data(buf.data, string_len, allocator);
 }
 
 static dyn_string_result_type_name _create_dyn_str_from_nts(const dyn_string_character_type *nts,

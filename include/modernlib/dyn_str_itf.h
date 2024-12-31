@@ -51,6 +51,19 @@ dyn_string_result_type_name dyn_string_func(duplicate)(const dyn_string_type_nam
     return dyn_string_func(from)(str, str._char_array._data.allocator);
 }
 
+/**
+ * create a string by copying string content from a memory buffer
+ *
+ * A new string is created by copying the character string from
+ * the data buffer. If the string is already null-terminated, no additional
+ * memory is allocated. Otherwise, an additional slot is allocated for
+ * the terminating NUL.
+ *
+ * @param buf the source buffer
+ * @param allocator memory allocator used to create a new string
+ *
+ * @return a new string created from the buffer's content
+ * */
 MODERNLIB_PUBLIC
 dyn_string_result_type_name dyn_string_func(from_buffer)(const data_buffer buf, const mem_allocator *allocator);
 
