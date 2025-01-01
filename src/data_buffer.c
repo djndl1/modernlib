@@ -78,8 +78,8 @@ static bool buffers_overlapping(const data_buffer a, const data_buffer b)
 
 bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t count)
 {
-    if (self.data == nullptr && other.data == nullptr
-        || self.data != nullptr && other.data == nullptr) {
+    if ((self.data == nullptr && other.data != nullptr)
+        || (self.data != nullptr && other.data == nullptr)) {
         return false;
     }
 
