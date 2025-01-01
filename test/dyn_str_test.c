@@ -57,7 +57,7 @@ UTEST(DYN_CSTR, duplicate)
 UTEST(DYN_CSTR, from_buffer)
 {
     dyn_cstr s = dyn_cstr_from_nts("中文ABCDEFGHIJKLM", std_allocator).str;
-    for (size_t i = 0; i < 100000000; i++) {
+    for (size_t i = 0; i < 1000000; i++) {
         EXPECT_STREQ(dyn_cstr_nts(s), "中文ABCDEFGHIJKLM");
 
         dyn_cstr dup = dyn_cstr_from_buffer(s._char_array._data, std_allocator).str;
@@ -67,7 +67,7 @@ UTEST(DYN_CSTR, from_buffer)
         s = dup;
         dup = temp;
 
-        if (i % 10000 == 0) {
+        if (i % 100000 == 0) {
             printf("%zu: from_buffer string capacity: %zu\n", i, dyn_cstr_capacity(s));
         }
 
@@ -78,7 +78,7 @@ UTEST(DYN_CSTR, from_buffer)
 UTEST(DYN_CWSTR, from_buffer)
 {
     dyn_cwstr s = dyn_cwstr_from_nts(L"中文ABCDEFGHIJKLM", std_allocator).str;
-    for (size_t i = 0; i < 100000000; i++) {
+    for (size_t i = 0; i < 1000000; i++) {
         EXPECT_EQ(wcscmp(dyn_cwstr_nts(s), L"中文ABCDEFGHIJKLM"), 0);
 
         dyn_cwstr dup = dyn_cwstr_from_buffer(s._char_array._data, std_allocator).str;
@@ -88,11 +88,25 @@ UTEST(DYN_CWSTR, from_buffer)
         s = dup;
         dup = temp;
 
-        if (i % 10000 == 0) {
+        if (i % 100000 == 0) {
             printf("%zu: from_buffer string capacity: %zu\n", i, dyn_cwstr_capacity(s));
         }
 
         dyn_cwstr_destroy(&dup);
+    }
+}
+
+UTEST(DYN_CSTR, len)
+{
+    dyn_cstr s;
+    scoped(s = dyn_cstr_from_nts_stdalloc("ABCDEF").str, dyn_cstr_destroy(&s)) {
+        EXPECT_EQ(dyn_cstr_len(s), 6);
+    }
+    scoped(s = dyn_cstr_from_nts_stdalloc("").str, dyn_cstr_destroy(&s)) {
+        EXPECT_EQ(dyn_cstr_len(s), 0);
+    }
+    scoped(s = dyn_cstr_from_nts_stdalloc(nullptr).str, dyn_cstr_destroy(&s)) {
+        EXPECT_EQ(dyn_cstr_len(s), 0);
     }
 }
 

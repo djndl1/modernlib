@@ -73,11 +73,19 @@ static inline dyn_string_result_type_name dyn_string_func(from_stdalloc)(const d
     return dyn_string_func(from)(str, std_allocator);
 }
 
+/**
+ * Create a new string from another null-terminated string.
+ *
+ * @param lit a null-termianted string, if the string is `NULL`, an empty string is created
+ * @param allocator the memory allocator used to allocate this new string
+ *
+ * @return the new string
+ * */
 MODERNLIB_PUBLIC
 dyn_string_result_type_name dyn_string_func(from_nts)(const dyn_string_character_type *lit, const mem_allocator *allocator);
 
 MODERNLIB_ALWAYS_INLINE
-static inline dyn_string_result_type_name dyn_string_func(nts_stdalloc)(const dyn_string_character_type *lit)
+static inline dyn_string_result_type_name dyn_string_func(from_nts_stdalloc)(const dyn_string_character_type *lit)
 {
     return dyn_string_func(from_nts)(lit, std_allocator);
 }

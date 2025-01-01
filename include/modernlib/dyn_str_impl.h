@@ -6,6 +6,8 @@
 #include <wchar.h>
 #include <errno.h>
 
+static const dyn_string_character_type empty_char_array[] = { 0 };
+
 static dyn_string_result_type_name _create_dyn_str_from_data(const void *data,
                                                              size_t count,
                                                              const mem_allocator *allocator)
@@ -68,9 +70,14 @@ dyn_string_result_type_name dyn_string_func(from)(const dyn_string_type_name str
          allocator);
 }
 
-dyn_string_result_type_name dyn_string_func(from_nts)(const dyn_string_character_type *nbts, const mem_allocator *allocator)
+dyn_string_result_type_name dyn_string_func(from_nts)(const dyn_string_character_type *nbts,
+                                                      const mem_allocator *allocator)
 {
-    return _create_dyn_str_from_nts(nbts, allocator);
+    if (nbts == nullptr) {
+        return _create_dyn_str_from_nts(&empty_char_array[0], allocator);
+    } else {
+        return _create_dyn_str_from_nts(nbts, allocator);
+    }
 }
 
 
