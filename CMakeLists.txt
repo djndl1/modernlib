@@ -9,6 +9,12 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(MSVC)
+  add_compile_options(/Wall)
+else()
+  add_compile_options(-Wall -Wstrict-aliasing -Wno-unused-function)
+endif()
+
 set(libsrc
   src/allocator.c
   src/data_buffer.c
