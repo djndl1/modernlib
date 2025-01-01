@@ -9,20 +9,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(MSVC)
-  add_compile_options(/Wall)
-
-  if($<CONFIG> STREQUAL "Debug")
-    add_compile_definitions(/fsanitize=address)
-  endif()
-else()
-  add_compile_options(-Wall -Wstrict-aliasing -Wno-unused-function)
-
-  if($<CONFIG> STREQUAL "Debug")
-    add_compile_definitions(-fsanitize=address)
-  endif()
-endif()
-
 set(libsrc
   src/allocator.c
   src/data_buffer.c
@@ -36,6 +22,21 @@ set(libsrc
 add_library(modernlib SHARED
   ${libsrc}
 )
+
+if(MSVC)
+  target_compile_options(modernlib PRIVATE /Wall)
+
+  if($<CONFIG> STREQUAL "Debug")
+    target_compile_options(modernlib PRIVATE /fsanitize=address)
+  endif()
+else()
+  target_compile_options(modernlib PRIVATE -fstrict-aliasing -Wall -Wstrict-aliasing -Wno-unused-function)
+
+  if($<CONFIG> STREQUAL "Debug")
+    target_compile_options(modernlib PRIVATE -fsanitize=address)
+  endif()
+endif()
+
 target_compile_definitions(modernlib PRIVATE MODERNLIB_SHARED_BUILD)
 
 set_target_properties(modernlib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
