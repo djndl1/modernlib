@@ -11,8 +11,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(MSVC)
   add_compile_options(/Wall)
+
+  if($<CONFIG> STREQUAL "Debug")
+    add_compile_definitions(/fsanitize=address)
+  endif()
 else()
   add_compile_options(-Wall -Wstrict-aliasing -Wno-unused-function)
+
+  if($<CONFIG> STREQUAL "Debug")
+    add_compile_definitions(-fsanitize=address)
+  endif()
 endif()
 
 set(libsrc
