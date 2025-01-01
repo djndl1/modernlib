@@ -27,6 +27,12 @@ struct mem_allocator {
 };
 
 MODERNLIB_PUBLIC
+extern const mem_allocator *const void_allocator;
+
+MODERNLIB_PUBLIC
+extern const mem_allocator *const stack_allocator;
+
+MODERNLIB_PUBLIC
 extern const mem_allocator *const std_allocator;
 
 MODERNLIB_ALWAYS_INLINE

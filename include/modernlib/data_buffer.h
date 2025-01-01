@@ -21,10 +21,10 @@ typedef struct data_buffer {
 } data_buffer;
 
 #ifdef __cplusplus
-#  define DATA_BUFFER_TRANSIENT(dat, len) data_buffer{ dat, len, nullptr }
+#  define DATA_BUFFER_TRANSIENT(dat, len) data_buffer{ dat, len, void_allocator }
 #else
 #  define DATA_BUFFER_TRANSIENT(dat, len) \
-    ((data_buffer){ .data = dat, .length = len, .allocator = nullptr })
+    ((data_buffer){ .data = dat, .length = len, .allocator = void_allocator })
 #endif
 
 #define byte_buffer_at(self, idx) (data_buffer_as_byte_array(self)[idx])
