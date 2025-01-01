@@ -70,16 +70,33 @@ dyn_string_result_type_name dyn_string_func(from)(const dyn_string_type_name str
          allocator);
 }
 
-dyn_string_result_type_name dyn_string_func(from_nts)(const dyn_string_character_type *nbts,
-                                                      const mem_allocator *allocator)
+dyn_string_result_type_name dyn_string_func(from_nts)(const dyn_string_character_type *nts,
+                                                      const mem_allocator *const allocator)
 {
-    if (nbts == nullptr) {
-        return _create_dyn_str_from_nts(&empty_char_array[0], allocator);
-    } else {
-        return _create_dyn_str_from_nts(nbts, allocator);
-    }
+    const dyn_string_character_type *source = (nts == nullptr) ? empty_char_array : nts;
+    return _create_dyn_str_from_nts(source, allocator);
 }
 
+dyn_string_result_type_name dyn_string_func(move_from_nts)(dyn_string_character_type **nts,
+                                                          const mem_allocator * const allocator)
+{
+    if (nts == nullptr || *nts == nullptr) {
+        return (dyn_string_result_type_name){
+            .error = EINVAL,
+        };
+    }
+
+    dyn_string_character_type *source = *nts;
+    size_t count = nts_len(source);
+    dyn_string_internal_array_result_type arr_result = dyn_string_internal_array_func(move_from_data)(&source, count, allocator);
+    if (arr_result.error) {
+        return (dyn_string_result_type_name){ .error = arr_result.error };
+    }
+    *nts = source;
+
+    dyn_string_type_name s = { ._char_array = arr_result.array };
+    return (dyn_string_result_type_name){ .str = s, .error = 0 };
+}
 
 int dyn_string_func(compare)(const dyn_string_type_name self, const dyn_string_type_name other)
 {

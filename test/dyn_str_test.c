@@ -62,6 +62,7 @@ UTEST(DYN_CSTR, from_buffer)
 
         dyn_cstr dup = dyn_cstr_from_buffer(s._char_array._data, std_allocator).str;
         EXPECT_EQ(dyn_cstr_compare(s, dup), 0);
+        EXPECT_TRUE(dyn_cstr_equal(s, dup));
 
         dyn_cstr temp = s;
         s = dup;
@@ -83,6 +84,7 @@ UTEST(DYN_CWSTR, from_buffer)
 
         dyn_cwstr dup = dyn_cwstr_from_buffer(s._char_array._data, std_allocator).str;
         EXPECT_EQ(dyn_cwstr_compare(s, dup), 0);
+        EXPECT_TRUE(dyn_cwstr_equal(s, dup));
 
         dyn_cwstr temp = s;
         s = dup;
@@ -107,6 +109,22 @@ UTEST(DYN_CSTR, len)
     }
     scoped(s = dyn_cstr_from_nts_stdalloc(nullptr).str, dyn_cstr_destroy(&s)) {
         EXPECT_EQ(dyn_cstr_len(s), 0);
+    }
+}
+
+UTEST(DYN_CSTR, release)
+{
+    dyn_cstr s;
+    scoped(s = dyn_cstr_from_nts_stdalloc("ABC").str, dyn_cstr_destroy(&s)) {
+        char *nts = dyn_cstr_release(&s);
+        EXPECT_STREQ(nts, "ABC");
+
+        char *cstr = dyn_cstr_nts(s);
+        EXPECT_EQ(cstr, nullptr);
+
+        s = dyn_cstr_move_from_nts_stdalloc(&nts).str;
+        EXPECT_EQ(nts, nullptr);
+        EXPECT_STREQ(dyn_cstr_nts(s), "ABC");
     }
 }
 

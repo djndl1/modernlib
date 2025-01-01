@@ -118,3 +118,25 @@ error_t data_buffer_copy_from(data_buffer *self, const void *data, size_t byte_c
 
     return E_OK;
 }
+
+buffer_alloc_result data_buffer_move_from(void **data,
+                                          size_t count,
+                                          const mem_allocator *const allocator)
+{
+    if (data == nullptr || *data == nullptr) {
+        return (buffer_alloc_result){
+            .error = EINVAL,
+        };
+    }
+
+    void *d = *data;
+    *data = nullptr;
+
+    return (buffer_alloc_result){
+    .buffer = (data_buffer){
+            .allocator = allocator,
+            .data = d,
+            .length = count,
+        },
+    };
+}

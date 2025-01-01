@@ -29,6 +29,10 @@ MODERNLIB_PUBLIC
 dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
                                                      size_t count,
                                                      const mem_allocator *allocator);
+MODERNLIB_PUBLIC
+dyn_array_result_type_name dyn_array_func(move_from_data)(dyn_array_element_type **data,
+                                                          size_t count,
+                                                          const mem_allocator *allocator);
 
 MODERNLIB_PUBLIC
 dyn_array_result_type_name dyn_array_func(from_buffer)(const data_buffer data,

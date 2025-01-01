@@ -39,6 +39,35 @@ dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
     return (dyn_array_result_type_name) { .array = newarr };
 }
 
+dyn_array_result_type_name dyn_array_func(move_from_data)(dyn_array_element_type **data,
+                                                          size_t count,
+                                                          const mem_allocator *allocator)
+{
+    if (data == nullptr || *data == nullptr) {
+        return (dyn_array_result_type_name){
+            .error = EINVAL,
+        };
+    }
+
+    void *original_ptr = *data;
+    buffer_alloc_result buffer_result = data_buffer_move_from(&original_ptr, count, allocator);
+    if (buffer_result.error) {
+        return (dyn_array_result_type_name){
+            .error = buffer_result.error,
+        };
+    }
+    *data = original_ptr;
+
+    dyn_array_type_name arr = {
+        ._data = buffer_result.buffer,
+        ._len = count,
+    };
+    return (dyn_array_result_type_name){
+        .error = 0,
+        .array = arr,
+    };
+}
+
 dyn_array_result_type_name dyn_array_func(from_buffer)(const data_buffer data,
                                                        const mem_allocator *allocator)
 {

@@ -59,6 +59,11 @@ MODERNLIB_PUBLIC
 buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator);
 
 MODERNLIB_PUBLIC
+buffer_alloc_result data_buffer_move_from(void **data,
+                                          size_t count,
+                                          const mem_allocator *const allocator);
+
+MODERNLIB_PUBLIC
 buffer_alloc_result std_allocate_buffer(size_t);
 
 MODERNLIB_PUBLIC
