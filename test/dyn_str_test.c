@@ -128,4 +128,27 @@ UTEST(DYN_CSTR, release)
     }
 }
 
+UTEST(DYN_CSTR, concat)
+{
+    for (size_t i = 0; i < 1000000000; i++) {
+        dyn_cstr s;
+        scoped(s = dyn_cstr_from_nts("ABCDEFGHIJKLM", std_allocator).str,
+               dyn_cstr_destroy(&s)) {
+            EXPECT_STREQ(dyn_cstr_nts(s), "ABCDEFGHIJKLM");
+            dyn_cstr concated = dyn_cstr_concat(s, s, std_allocator).str;
+            deferred(dyn_cstr_destroy(&concated)) {
+                EXPECT_STREQ(dyn_cstr_nts(concated), "ABCDEFGHIJKLMABCDEFGHIJKLM");
+            }
+        }
+
+        const size_t per_count = 10000000;
+        if (i % per_count == 0) {
+            size_t n_count = i / per_count;
+            printf("DYN_CSTR.concat: %zu concatenations\n",
+                n_count * per_count);
+            fflush(stdout);
+        }
+    }
+}
+
 UTEST_MAIN();

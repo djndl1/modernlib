@@ -110,3 +110,44 @@ void dyn_string_func(destroy)(dyn_string_type_name *self)
 {
     dyn_string_internal_array_func(destroy)(&self->_char_array);
 }
+
+dyn_string_result_type_name dyn_string_func(concat)(const dyn_string_type_name one,
+                                                    const dyn_string_type_name two,
+                                                    const mem_allocator *const allocator)
+{
+    size_t len_one = dyn_string_func(len)(one);
+    size_t len_two = dyn_string_func(len)(two);
+
+    size_t len_concat = len_one + len_two;
+    if (len_concat == 0) {
+        return _create_dyn_str_from_nts(empty_char_array, allocator);
+    }
+
+    dyn_string_internal_array_result_type newarr_result = dyn_string_internal_array_func(of_capacity)(
+        len_concat + 1, allocator);
+    if (newarr_result.error) {
+        return (dyn_string_result_type_name){ .error = newarr_result.error };
+    }
+    dyn_string_internal_array_type arr = newarr_result.array;
+    arr._len = len_concat + 1;
+
+    error_t err1 = dyn_string_internal_array_func(overwrite_at)(
+        arr, 0, dyn_string_internal_array_func(get_data)(one._char_array), len_one);
+    if (err1.error) {
+        dyn_string_internal_array_func(destroy)(&arr);
+        return (dyn_string_result_type_name){ .error = err1.error };
+    }
+
+    error_t err2 = dyn_string_internal_array_func(overwrite_at)(
+        arr, len_one, dyn_string_internal_array_func(get_data)(two._char_array), len_two);
+    if (err2.error) {
+        dyn_string_internal_array_func(destroy)(&arr);
+        return (dyn_string_result_type_name){ .error = err2.error };
+    }
+    dyn_string_internal_array_func(set)(arr, len_concat, 0);
+
+    return (dyn_string_result_type_name){
+        .error = 0,
+        .str = { ._char_array = arr },
+    };
+}

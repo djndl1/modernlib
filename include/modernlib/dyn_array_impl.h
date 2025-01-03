@@ -84,6 +84,68 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
 
 #define dyn_array_get_directp(pself, idx)  (dyn_array_func(get_data)(*self)[idx])
 
+error_t dyn_array_func(overwrite_at)(const dyn_array_type_name self,
+                                     size_t begin_index,
+                                     const dyn_array_element_type *source,
+                                     size_t count)
+{
+    size_t len = dyn_array_func(size)(self);
+    if (len - begin_index < count) {
+        return E_INVALID_OPERATION;
+    }
+
+    dyn_array_element_type *arr_data = dyn_array_func(get_data)(self);
+    size_t mem_len = sizeof(dyn_array_element_type) * count;
+    memcpy(&arr_data[begin_index], source, mem_len);
+
+    return E_OK;
+}
+
+dyn_array_result_type_name dyn_array_func(concat)(const dyn_array_type_name one,
+                                                  const dyn_array_type_name two,
+                                                  const mem_allocator *allocator)
+{
+    size_t len_one = dyn_array_func(size)(one);
+    size_t len_two = dyn_array_func(size)(two);
+
+    size_t len_concat = len_one + len_two;
+    if (len_concat == 0) {
+        return dyn_array_func(of_capacity)(0, allocator);
+    }
+
+    dyn_array_result_type_name newarr_result = dyn_array_func(of_capacity)(
+        len_concat, allocator);
+    if (newarr_result.error) {
+        return newarr_result;
+    }
+    dyn_array_type_name arr = newarr_result.array;
+
+    arr._len = len_one;
+    error_t err1 = dyn_array_func(overwrite_at)(arr,
+                                                0,
+                                                dyn_array_func(get_data)(one),
+                                                len_one);
+    if (err1.error) {
+        dyn_array_func(destroy)(&arr);
+        return (dyn_array_result_type_name){ .error = err1.error };
+    }
+
+    arr._len += len_two;
+    error_t err2 = dyn_array_func(overwrite_at)(arr,
+                                                len_one,
+                                                dyn_array_func(get_data)(two),
+                                                len_two);
+    if (err2.error) {
+        dyn_array_func(destroy)(&arr);
+        return (dyn_array_result_type_name){ .error = err2.error };
+    }
+
+    return (dyn_array_result_type_name){
+        .error = 0,
+        .array = arr,
+    };
+}
+
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx)
 {
     if (idx >= dyn_array_func(size)(self)) {

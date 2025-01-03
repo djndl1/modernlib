@@ -121,6 +121,11 @@ static bool dyn_string_func(equal)(const dyn_string_type_name self, const dyn_st
     return dyn_string_func(compare(self, other)) == 0;
 }
 
+MODERNLIB_PUBLIC
+dyn_string_result_type_name dyn_string_func(concat)(const dyn_string_type_name one,
+                                                    const dyn_string_type_name two,
+                                                    const mem_allocator *const allocator);
+
 MODERNLIB_ALWAYS_INLINE
 static inline dyn_string_character_type *dyn_string_func(release)(dyn_string_type_name *self)
 {

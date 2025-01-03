@@ -103,6 +103,12 @@ static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_nam
 }
 
 MODERNLIB_PUBLIC
+error_t dyn_array_func(overwrite_at)(const dyn_array_type_name self,
+                                     size_t begin_index,
+                                     const dyn_array_element_type *source,
+                                     size_t count);
+
+MODERNLIB_PUBLIC
 error_t dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity);
 
 MODERNLIB_PUBLIC
@@ -120,6 +126,11 @@ MODERNLIB_PUBLIC
 error_t dyn_array_func(remove_at)(dyn_array_type_name *self,
                                   size_t idx,
                                   void (*destructor)(dyn_array_element_type*));
+
+MODERNLIB_PUBLIC
+dyn_array_result_type_name dyn_array_func(concat)(const dyn_array_type_name one,
+                                                  const dyn_array_type_name two,
+                                                  const mem_allocator *allocator);
 
 MODERNLIB_PUBLIC
 bool dyn_array_func(remove)(dyn_array_type_name *self,
