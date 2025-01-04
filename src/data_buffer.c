@@ -34,7 +34,7 @@ buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator
     }
 
     result.error = 0;
-    result.buffer.data = mem_res.mem;
+    move_ptr(mem_res.mem, result.buffer.data);
     result.buffer.length = count;
     result.buffer.allocator = allocator;
 
@@ -59,7 +59,7 @@ error_t data_buffer_resize(data_buffer *self, size_t newsize)
     if (r.error != 0) {
         return ERR_FROM_CODE(r.error);
     }
-    self->data = r.mem;
+    move_ptr(r.mem, self->data);
     self->length = newsize;
 
     return E_OK;
@@ -67,11 +67,12 @@ error_t data_buffer_resize(data_buffer *self, size_t newsize)
 
 static bool buffers_overlapping(const data_buffer a, const data_buffer b)
 {
-    uint8_t *s1 = a.data;
-    uint8_t *e1 = (uint8_t*)a.data + a.length;
+    // uint8_t or unsigned char may alias any object
+    const uint8_t *s1 = a.data;
+    const uint8_t *e1 = (const uint8_t*)a.data + a.length;
 
-    uint8_t *s2 = b.data;
-    uint8_t *e2 = (uint8_t*)b.data + b.length;
+    const uint8_t *s2 = b.data;
+    const uint8_t *e2 = (const uint8_t*)b.data + b.length;
 
     return MIN(e1, e2) - MAX(s1, s2) > 0;
 }
@@ -109,7 +110,7 @@ error_t data_buffer_copy_to(const data_buffer self, data_buffer *target)
     return E_OK;
 }
 
-error_t data_buffer_copy_from(data_buffer *self, const void *data, size_t byte_count)
+error_t data_buffer_copy_content_from(data_buffer *self, const void *data, size_t byte_count)
 {
     if (self == nullptr) return E_INVALID_ARGS;
 
@@ -129,8 +130,8 @@ buffer_alloc_result data_buffer_move_from(void **data,
         };
     }
 
-    void *d = *data;
-    *data = nullptr;
+    void *d;
+    move_ptr(*data, d);
 
     return (buffer_alloc_result){
     .buffer = (data_buffer){

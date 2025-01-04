@@ -13,6 +13,10 @@ extern "C" {
 #include "modernlib/errors.h"
 #include "modernlib/allocator.h"
 
+/**
+ * A data buffer a chunk of memory. It contains a pointer to an allocator
+ * object that is responsible for its allocation and deallocation.
+ **/
 typedef struct data_buffer {
     void *data;
     size_t length;
@@ -27,6 +31,9 @@ typedef struct data_buffer {
     ((data_buffer){ .data = dat, .length = len, .allocator = void_allocator })
 #endif
 
+/**
+ * @return the byte lvalue at the specified index of the buffer
+ **/
 #define byte_buffer_at(self, idx) (data_buffer_as_byte_array(self)[idx])
 
 typedef struct buffer_alloc_result {
@@ -34,6 +41,33 @@ typedef struct buffer_alloc_result {
     data_buffer buffer;
 } buffer_alloc_result;
 
+
+MODERNLIB_PUBLIC
+buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator);
+
+MODERNLIB_PUBLIC
+buffer_alloc_result std_allocate_buffer(size_t);
+
+MODERNLIB_PUBLIC
+void data_buffer_destroy(data_buffer*);
+
+MODERNLIB_PUBLIC
+buffer_alloc_result data_buffer_move_from(void **data,
+                                          size_t count,
+                                          const mem_allocator *const allocator);
+
+MODERNLIB_PUBLIC
+error_t data_buffer_copy_content_from(data_buffer *self, const void *data, size_t byte_count);
+
+
+MODERNLIB_PUBLIC
+error_t data_buffer_copy_to(const data_buffer, data_buffer*);
+
+MODERNLIB_PUBLIC
+error_t data_buffer_resize(data_buffer *self, size_t newsize);
+
+MODERNLIB_PUBLIC
+bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t count);
 
 MODERNLIB_ALWAYS_INLINE
 static inline uint8_t *data_buffer_as_byte_array(const data_buffer self)
@@ -43,32 +77,49 @@ static inline uint8_t *data_buffer_as_byte_array(const data_buffer self)
     return pointer;
 }
 
-MODERNLIB_PUBLIC
-bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t count);
 
-MODERNLIB_PUBLIC
-error_t data_buffer_resize(data_buffer *self, size_t newsize);
+MODERNLIB_ALWAYS_INLINE
+static inline void *data_buffer_release(data_buffer *buf)
+{
+    void *ptr = buf->data;
+    buf->data = nullptr;
+    buf->length = 0;
+    buf->allocator = nullptr;
 
-MODERNLIB_PUBLIC
-error_t data_buffer_copy_to(const data_buffer, data_buffer*);
+    return ptr;
+}
 
-MODERNLIB_PUBLIC
-error_t data_buffer_copy_from(data_buffer *self, const void *data, size_t byte_count);
 
-MODERNLIB_PUBLIC
-buffer_alloc_result data_buffer_new(size_t count, const mem_allocator *allocator);
+MODERNLIB_ALWAYS_INLINE
+static inline data_buffer data_buffer_move(data_buffer *old)
+{
+    data_buffer newbuf;
+    newbuf.length = old->length;
+    newbuf.allocator = old->allocator;
+    newbuf.data = data_buffer_release(old);
 
-MODERNLIB_PUBLIC
-buffer_alloc_result data_buffer_move_from(void **data,
-                                          size_t count,
-                                          const mem_allocator *const allocator);
+    return newbuf;
+}
 
-MODERNLIB_PUBLIC
-buffer_alloc_result std_allocate_buffer(size_t);
+MODERNLIB_ALWAYS_INLINE
+static inline buffer_alloc_result data_buffer_copy(const data_buffer source)
+{
+    buffer_alloc_result newresult = data_buffer_new(source.length, source.allocator);
+    if (newresult.error) {
+        return (buffer_alloc_result){ .error = newresult.error };
+    }
 
-MODERNLIB_PUBLIC
-void data_buffer_destroy(data_buffer*);
+    error_t e = data_buffer_copy_to(source, &newresult.buffer);
+    if (e.error) {
+        data_buffer_destroy(&newresult.buffer);
+        return (buffer_alloc_result){ .error = e.error };
+    }
 
+    return (buffer_alloc_result){
+        .buffer =  data_buffer_move(&newresult.buffer),
+        .error = 0,
+    };
+}
 
 #ifdef __cplusplus
 }

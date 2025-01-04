@@ -29,7 +29,7 @@ dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
     }
     dyn_array_type_name newarr = creation_result.array;
 
-    error_t err = data_buffer_copy_from(&newarr._data, data, count * sizeof(dyn_array_element_type));
+    error_t err = data_buffer_copy_content_from(&newarr._data, data, count * sizeof(dyn_array_element_type));
     if (err.error) {
         data_buffer_destroy(&newarr._data);
         return (dyn_array_result_type_name) { .error = err.error };
