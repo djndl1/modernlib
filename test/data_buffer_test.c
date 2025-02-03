@@ -54,6 +54,8 @@ UTEST(DATA_BUFFER, move_from)
             size_t len = buf.length;
             const mem_allocator *allocator = buf.allocator;
             void *data = data_buffer_release(&buf);
+            EXPECT_EQ(buf.data, nullptr);
+
             const uint8_t *data_borrowed = data;
             scoped(moved = data_buffer_move_from(&data, len, allocator).buffer,
                    data_buffer_destroy(&moved)) {
@@ -63,6 +65,136 @@ UTEST(DATA_BUFFER, move_from)
                 for (size_t j = 0; j < moved.length; j++) {
                     EXPECT_EQ(byte_buffer_at(moved, j), data_borrowed[j]);
                 }
+            }
+        }
+    }
+}
+
+UTEST(DATA_BUFFER, copy_to)
+{
+    for (size_t i = 0; i < 10000; i++) {
+        srand(time(NULL));
+
+        data_buffer buf;
+        scoped(buf = data_buffer_new(rand() % M_COUNT(1), std_allocator).buffer,
+               data_buffer_destroy(&buf)) {
+            for (size_t j = 0; j < buf.length; j++) {
+                byte_buffer_at(buf, j) = rand();
+            }
+
+            data_buffer copied;
+            scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
+                   data_buffer_destroy(&copied)) {
+                error_t e = data_buffer_copy_to(buf, &copied);
+                EXPECT_EQ(e.error, 0);
+
+                for (size_t j = 0; j < copied.length; j++) {
+                    EXPECT_EQ(byte_buffer_at(copied, j), byte_buffer_at(buf, j));
+                }
+            }
+
+            scoped(copied = data_buffer_new(buf.length / 2, std_allocator).buffer,
+                   data_buffer_destroy(&copied)) {
+                error_t e = data_buffer_copy_to(buf, &copied);
+                EXPECT_EQ(e.error, 0);
+
+                for (size_t j = 0; j < copied.length; j++) {
+                    EXPECT_EQ(byte_buffer_at(copied, j), byte_buffer_at(buf, j));
+                }
+            }
+
+            scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
+                   data_buffer_destroy(&copied)) {
+                error_t e = data_buffer_copy_to(buf, &copied);
+
+                EXPECT_EQ(e.error, 0);
+            }
+        }
+    }
+}
+
+UTEST(DATA_BUFFER, resize)
+{
+    for (size_t i = 0; i < 10000; i++) {
+        srand(time(NULL));
+
+        data_buffer buf;
+        scoped(buf = data_buffer_new(rand() % M_COUNT(1), std_allocator).buffer,
+               data_buffer_destroy(&buf)) {
+            uint8_t before_resizing[10];
+            for (size_t j = 0; j < buf.length; j++) {
+                byte_buffer_at(buf, j) = rand();
+                if (j < 10) {
+                    before_resizing[j] = byte_buffer_at(buf, j);
+                }
+            }
+            data_buffer_resize(&buf, 10);
+            EXPECT_EQ(buf.length, 10);
+
+            for (size_t j = 0; j < buf.length; j++) {
+                EXPECT_EQ(byte_buffer_at(buf, j), before_resizing[j]);
+            }
+        }
+
+        scoped(buf = data_buffer_new(rand() % M_COUNT(1), std_allocator).buffer,
+               data_buffer_destroy(&buf)) {
+            for (size_t j = 0; j < buf.length; j++) {
+                byte_buffer_at(buf, j) = rand();
+            }
+
+            data_buffer temp;
+            scoped(temp = data_buffer_copy(buf).buffer, data_buffer_destroy(&temp)) {
+                size_t newlen = buf.length * 2;
+                data_buffer_resize(&buf, newlen);
+                EXPECT_EQ(buf.length, newlen);
+
+                for (size_t j = 0; j < temp.length; j++) {
+                    EXPECT_EQ(byte_buffer_at(buf, j), byte_buffer_at(temp, j));
+                }
+            }
+        }
+    }
+}
+
+
+UTEST(DATA_BUFFER, copy_content_from)
+{
+    for (size_t i = 0; i < 10000; i++) {
+        srand(time(NULL));
+
+        data_buffer buf;
+        scoped(buf = data_buffer_new(rand() % M_COUNT(1), std_allocator).buffer,
+               data_buffer_destroy(&buf)) {
+            for (size_t j = 0; j < buf.length; j++) {
+                byte_buffer_at(buf, j) = rand();
+            }
+
+            data_buffer copied;
+            scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
+                   data_buffer_destroy(&copied)) {
+                error_t e = data_buffer_copy_content_from(&copied, buf.data, buf.length);
+                EXPECT_EQ(e.error, 0);
+
+                for (size_t j = 0; j < copied.length; j++) {
+                    EXPECT_EQ(byte_buffer_at(copied, j), byte_buffer_at(buf, j));
+                }
+            }
+
+            scoped(copied = data_buffer_new(buf.length / 2, std_allocator).buffer,
+                   data_buffer_destroy(&copied)) {
+                error_t e = data_buffer_copy_content_from(&copied, buf.data, buf.length);
+                EXPECT_EQ(e.error, 0);
+
+                for (size_t j = 0; j < copied.length; j++) {
+                    EXPECT_EQ(byte_buffer_at(copied, j), byte_buffer_at(buf, j));
+                }
+            }
+
+            scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
+                   data_buffer_destroy(&copied)) {
+                error_t e = data_buffer_copy_content_from(&copied, buf.data, 0);
+
+                EXPECT_EQ(e.error, 0);
             }
         }
     }
