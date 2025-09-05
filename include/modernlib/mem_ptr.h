@@ -13,9 +13,9 @@
 /**
  * Typically, an object should be wrapped in a struct
  * and a pointer to it should never be declared
- * in cases other than in parameters to perform a mutable borrow.
+ * unless pass-by-in-reference parameters are required to perform a mutable borrow.
  * All these types are not resources themselves but handles to resources.
- * They may be copied as value, borrowed as pointers to mutable structures.
+ * They may be copied as values, borrowed as pointers to mutable structures.
  **/
 typedef struct generic_mem_ptr {
     void *ptr;
@@ -47,7 +47,8 @@ static inline generic_mem_ptr generic_mem_ptr_move(generic_mem_ptr *ptr)
 /**
  * We don't known what to do when a pointer is no longer used because
  * we are not sure if the referenced resource needs destroying.
- * We simply set it to `NULL`
+ * We simply set it to `NULL` here.
+ * Skipping freeing resources is not a recommended way to deal with them.
  **/
 MODERNLIB_ALWAYS_INLINE
 static inline void generic_mem_ptr_destroy(generic_mem_ptr *ptr)

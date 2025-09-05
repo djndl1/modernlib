@@ -6,13 +6,22 @@
 #include "modernlib/internal/compilers.h"
 
 #define interface_self(itf) (itf.self)
+/**
+ * The implementation type name of type `impl` for the interface `itf`
+ */
 #define interface_impl(itf, impl) CONCAT(impl, CONCAT(_impl_, itf))
+/**
+ * the vtable variable name of type `impl` for the interface `itf`
+ */
 #define interface_vtbl_name(itf, impl) CONCAT(impl, CONCAT(_vtbl_, itf))
 
 typedef struct interface_base {
     const mem_allocator *allocator;
 } interface_base;
 
+/**
+ * Invalidate and deallocate an interface object using its own allocator.
+ */
 MODERNLIB_ALWAYS_INLINE
 static inline void interface_invalidate(interface_base *itf)
 {

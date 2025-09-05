@@ -1,3 +1,4 @@
+#include "modernlib/allocator.h"
 #include "modernlib/data_buffer.h"
 #include "modernlib/errors.h"
 #include <errno.h>
@@ -334,4 +335,19 @@ collection_obj *dyn_array_func(as_collection)(dyn_array_type_name self, const me
     // as we are not accessing the implementation structure
     // only its first member
     return (collection_obj*)wrapper;
+}
+
+static const enumerator_vtable(dyn_array_enumerator_typename) enumerator_vtable = {
+    .current = nullptr,
+    .next = nullptr,
+    .reset = nullptr,
+};
+
+dyn_array_enumerator_typename dyn_array_func(get_enumerator)(const dyn_array_type_name self, const mem_allocator *allocator)
+{
+    dyn_array_enumerator_typename enumerator;
+
+    // TODO implement an enumerator
+
+    return enumerator;
 }
