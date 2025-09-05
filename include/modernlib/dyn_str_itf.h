@@ -46,7 +46,7 @@ MODERNLIB_PUBLIC
 dyn_string_result_type_name dyn_string_func(from)(const dyn_string_type_name str, const mem_allocator *allocator);
 
 MODERNLIB_ALWAYS_INLINE
-dyn_string_result_type_name dyn_string_func(duplicate)(const dyn_string_type_name str)
+static inline dyn_string_result_type_name dyn_string_func(duplicate)(const dyn_string_type_name str)
 {
     return dyn_string_func(from)(str, str._char_array._data.allocator);
 }
@@ -116,7 +116,7 @@ MODERNLIB_PUBLIC
 int dyn_string_func(compare)(const dyn_string_type_name self, const dyn_string_type_name other);
 
 MODERNLIB_ALWAYS_INLINE
-static bool dyn_string_func(equal)(const dyn_string_type_name self, const dyn_string_type_name other)
+static inline bool dyn_string_func(equal)(const dyn_string_type_name self, const dyn_string_type_name other)
 {
     return dyn_string_func(compare(self, other)) == 0;
 }
