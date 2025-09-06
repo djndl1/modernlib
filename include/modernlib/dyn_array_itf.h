@@ -5,7 +5,6 @@
 #include "modernlib/data_buffer.h"
 #include "modernlib/allocator.h"
 #include "modernlib/basis.h"
-#include "modernlib/collection.h"
 #include "modernlib/internal/compilers.h"
 
 #include "modernlib/dyn_array_macro.h"
@@ -145,16 +144,6 @@ error_t dyn_array_func(insert)(dyn_array_type_name *self,
 
 MODERNLIB_PUBLIC
 error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
-
-MODERNLIB_PUBLIC
-collection_obj *dyn_array_func(as_collection)(dyn_array_type_name self, const mem_allocator *allocator);
-
-#define enumerator_type_name dyn_array_enumerator_typename
-#define enumerator_element_type_name dyn_array_element_type
-#include "modernlib/enumerator_itf.h"
-
-MODERNLIB_PUBLIC
-dyn_array_enumerator_typename dyn_array_func(get_enumerator)(const dyn_array_type_name self, const mem_allocator *allocator);
 
 #undef dyn_array_element_type
 #undef dyn_array_type_name
