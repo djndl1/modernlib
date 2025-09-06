@@ -12,3 +12,7 @@ add_test(NAME dyn_str_test
 add_executable(data_buffer_test data_buffer_test.c)
 add_test(NAME data_buffer_test
   COMMAND data_buffer_test)
+
+add_executable(mem_ptr_test mem_ptr_test.c)
+add_test(NAME mem_ptr_test
+  COMMAND mem_ptr_test)
