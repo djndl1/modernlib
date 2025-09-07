@@ -35,9 +35,9 @@ typedef struct {
  * Allocate a memory region and creates a wrapper object for the memory pointer 
  */
 MODERNLIB_ALWAYS_INLINE
-static inline mem_ptr_alloc_result mem_ptr_funcname(allocate)(const mem_allocator *const allocator)
+static inline mem_ptr_alloc_result mem_ptr_funcname(allocate)(size_t n, const mem_allocator *const allocator)
 {
-    mem_alloc_result result = allocate_typed(allocator, mem_ptr_target_typename);
+    mem_alloc_result result = allocate_n_item(allocator, n, sizeof(mem_ptr_target_typename));
     if (result.error) {
         return (mem_ptr_alloc_result){ .error = result.error };
     }

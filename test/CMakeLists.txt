@@ -16,3 +16,10 @@ add_test(NAME data_buffer_test
 add_executable(mem_ptr_test mem_ptr_test.c)
 add_test(NAME mem_ptr_test
   COMMAND mem_ptr_test)
+
+add_executable(utfconverter_test utfconverter_test.c)
+if(NOT WIN32)
+  target_compile_options(utfconverter_test PRIVATE -fwide-exec-charset=UTF-16LE -fshort-wchar)
+endif()
+add_test(NAME utfconverter_test
+  COMMAND utfconverter_test)
