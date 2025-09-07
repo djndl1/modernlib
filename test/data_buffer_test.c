@@ -1,6 +1,7 @@
 #include "modernlib/data_buffer.h"
 #include "modernlib/basis.h"
 #include <stdlib.h>
+#include <time.h>
 
 #include "utest.h"
 

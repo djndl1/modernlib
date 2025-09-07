@@ -91,6 +91,7 @@ static inline dyn_string_result_type_name dyn_string_func(from_nts_stdalloc)(con
     return dyn_string_func(from_nts)(lit, std_allocator);
 }
 
+MODERNLIB_PUBLIC
 dyn_string_result_type_name dyn_string_func(move_from_nts)(dyn_string_character_type **nts,
                                                            const mem_allocator * const allocator);
 

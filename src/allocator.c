@@ -4,8 +4,9 @@
 #include <errno.h>
 #include "modernlib/basis.h"
 
-#if defined(_MSC_VER) || defined(__MINGW__)
+#if defined(_MSC_VER) || defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)
 #  include <malloc.h>
+#  undef alloca
 #  define alloca(s) (_alloca(s))
 #else
 #  include <alloca.h>
