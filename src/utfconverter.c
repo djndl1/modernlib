@@ -53,7 +53,7 @@ uint16_t *utf8_to_utf16(const uint8_t *utf8_buffer, size_t buffer_len)
 #else
 #include <iconv.h>
 
-char *iconv_convert(const char *source_charset, const char *dest_charset, const char *source_buffer, size_t buffer_len, size_t output_buffer_init_size)
+char *iconv_convert(const char *source_charset, const char *dest_charset, const char *source_buffer, size_t buffer_len, size_t output_buffer_init_size, size_t output_cp_size)
 {
     auto alloc_result = allocator_allocate(std_allocator, output_buffer_init_size);
     if(alloc_result.error) {
@@ -61,7 +61,7 @@ char *iconv_convert(const char *source_charset, const char *dest_charset, const 
     }
     char *output_buffer = alloc_result.mem;
 
-    iconv_t cd = iconv_open(source_charset, dest_charset);
+    iconv_t cd = iconv_open(dest_charset, source_charset);
     if (cd == (iconv_t)-1) {
         return nullptr;
     }
@@ -69,9 +69,10 @@ char *iconv_convert(const char *source_charset, const char *dest_charset, const 
     char *result = nullptr;
     deferred(iconv_close(cd)) {
         char *input_buffer = (char*)source_buffer;
+        char *output_ptr = output_buffer;
         size_t inputBytesLeft = buffer_len;
         size_t outputBytesLeft = output_buffer_init_size;
-        size_t converted_num = iconv(cd, &input_buffer, &buffer_len, &output_buffer, &outputBytesLeft);
+        size_t converted_num = iconv(cd, &input_buffer, &buffer_len, &output_ptr, &outputBytesLeft);
         (void)inputBytesLeft;
 
         if (converted_num == -1) {
@@ -79,13 +80,14 @@ char *iconv_convert(const char *source_charset, const char *dest_charset, const 
         }
 
         size_t real_output_len = output_buffer_init_size - outputBytesLeft;
-        auto realloc_result = allocator_reallocate(std_allocator, output_buffer, real_output_len + 1);
+        auto realloc_result = allocator_reallocate(std_allocator, output_buffer, real_output_len + output_cp_size);
 
         if (realloc_result.error) {
             goto deallocate_output_buffer;
         }
-
-        result = output_buffer;
+        result = realloc_result.mem;
+        // set final NULL
+        memset(result + real_output_len, 0, output_cp_size);
 
         break;
 deallocate_output_buffer:
@@ -100,18 +102,45 @@ deallocate_output_buffer:
 
 uint16_t *utf8_to_utf16(const uint8_t *utf8_buffer, size_t buffer_len)
 {
+    if (utf8_buffer == nullptr) return nullptr;
+    if (buffer_len == 0) {
+        auto alloc_result = uint16_mem_ptr_allocate(1, std_allocator);
+        if (alloc_result.error) {
+            return nullptr;
+        }
+        alloc_result.result.ptr[0] = 0;
+        return alloc_result.result.ptr;
+    }
+
+
+    if (buffer_len < 0) {
+        buffer_len = strlen((const char*)utf8_buffer);
+    }
     const char *input_buffer = (const char*)utf8_buffer;
-    char *output = iconv_convert("UTF-8", "UTF-16", input_buffer, buffer_len, 2 * buffer_len);
+    char *output = iconv_convert("UTF-8", "UTF-16LE", input_buffer, buffer_len, 2 * buffer_len, 1);
 
     return (uint16_t*)output;
 }
 
 uint8_t *utf16_to_utf8(const uint16_t *utf16_buffer, size_t buffer_len)
 {
+    if (utf16_buffer == nullptr) return nullptr;
+    if (buffer_len == 0) {
+        auto alloc_result = uint8_mem_ptr_allocate(1, std_allocator);
+        if (alloc_result.error) {
+            return nullptr;
+        }
+        alloc_result.result.ptr[0] = 0;
+        return alloc_result.result.ptr;
+    }
+
+    if (buffer_len < 0) {
+        buffer_len = strlen((const char*)utf16_buffer);
+    }
     const char *input_buffer = (const char*)utf16_buffer;
-    char *output = iconv_convert("UTF-16", "UTF-8", input_buffer, buffer_len, buffer_len + buffer_len / 2 + 4);
+    char *output = iconv_convert("UTF-16LE", "UTF-8", input_buffer, buffer_len, buffer_len + buffer_len / 2 + 4, 2);
     if (output == nullptr) {
-        output = iconv_convert("UTF-16", "UTF-8", input_buffer, buffer_len, 2 * buffer_len);
+        output = iconv_convert("UTF-16LE", "UTF-8", input_buffer, buffer_len, 2 * buffer_len, 2);
     }
 
     return (uint8_t*)output;
