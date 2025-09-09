@@ -18,6 +18,7 @@ set(libsrc
   src/dyn_char_array.c
   src/dyn_cwstr.c
   src/utfconverter.c
+  src/u16char.c
 )
 
 add_library(modernlib SHARED
