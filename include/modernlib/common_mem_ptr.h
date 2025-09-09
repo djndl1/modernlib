@@ -11,16 +11,32 @@
 #define mem_ptr_target_typename char
 #include "modernlib/mem_ptr_itf.h"
 
+#define mem_ptr_typename unsigned_char_mem_ptr
+#define mem_ptr_target_typename unsigned char
+#include "modernlib/mem_ptr_itf.h"
+
 #define mem_ptr_typename short_mem_ptr
 #define mem_ptr_target_typename short
+#include "modernlib/mem_ptr_itf.h"
+
+#define mem_ptr_typename unsigned_short_mem_ptr
+#define mem_ptr_target_typename unsigned short
 #include "modernlib/mem_ptr_itf.h"
 
 #define mem_ptr_typename int_mem_ptr
 #define mem_ptr_target_typename int
 #include "modernlib/mem_ptr_itf.h"
 
+#define mem_ptr_typename unsigned_int_mem_ptr
+#define mem_ptr_target_typename unsigned int
+#include "modernlib/mem_ptr_itf.h"
+
 #define mem_ptr_typename long_mem_ptr
 #define mem_ptr_target_typename long
+#include "modernlib/mem_ptr_itf.h"
+
+#define mem_ptr_typename unsigned_long_mem_ptr
+#define mem_ptr_target_typename unsigned long
 #include "modernlib/mem_ptr_itf.h"
 
 #define mem_ptr_typename uint8_mem_ptr
