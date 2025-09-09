@@ -4,6 +4,7 @@
 #include "modernlib/common_mem_ptr.h"
 #include "modernlib/allocator.h"
 #include "modernlib/utfconverter.h"
+#include "modernlib/u16char.h"
 
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
 #   include <windows.h>
@@ -136,12 +137,12 @@ uint8_t *utf16_to_utf8(const uint16_t *utf16_buffer, size_t buffer_len)
     }
 
     if (buffer_len < 0) {
-        buffer_len = strlen((const char*)utf16_buffer);
+        buffer_len = u16len(utf16_buffer);
     }
     const char *input_buffer = (const char*)utf16_buffer;
-    char *output = iconv_convert("UTF-16LE", "UTF-8", input_buffer, buffer_len, buffer_len + buffer_len / 2 + 4, 2);
+    char *output = iconv_convert("UTF-16LE", "UTF-8", input_buffer, buffer_len * 2, buffer_len + buffer_len / 2 + 4, 2);
     if (output == nullptr) {
-        output = iconv_convert("UTF-16LE", "UTF-8", input_buffer, buffer_len, 2 * buffer_len, 2);
+        output = iconv_convert("UTF-16LE", "UTF-8", input_buffer, buffer_len * 2, 2 * buffer_len, 2);
     }
 
     return (uint8_t*)output;

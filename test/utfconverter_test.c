@@ -61,7 +61,7 @@ UTEST(UTFTest, NormalUTF16ToUTF8) {
 
     const char *utf8_expected = u8"中文ABCD";
 
-    const char *utf8_str = utf16_to_utf8(utf16_str, 12);
+    const char *utf8_str = utf16_to_utf8(utf16_str, 6);
 
     ASSERT_STREQ(utf8_expected, utf8_str);
 
@@ -97,7 +97,7 @@ UTEST(UTFTest, TruncatedUTF16ToUTF8) {
 
     const char *utf8_expected = u8"中文AB";
 
-    const char *utf8_str = utf16_to_utf8(utf16_str, 8);
+    const char *utf8_str = utf16_to_utf8(utf16_str, 4);
 
     ASSERT_STREQ(utf8_expected, utf8_str);
 
