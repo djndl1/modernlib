@@ -9,7 +9,7 @@
 #define MODERNLIB_ALWAYS_INLINE
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
 #  if defined(MODERNLIB_SHARED_BUILD)
 #     define MODERNLIB_PUBLIC __declspec(dllexport)
 #  elif defined(MODERNLIB_STATIC_BUILD)

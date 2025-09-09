@@ -1,6 +1,7 @@
 #ifndef UTFCONVERTER_H_
-#define UTFCONVERTER_H_ value
+#define UTFCONVERTER_H_ 
 
+#include "modernlib/internal/compilers.h"
 #include <stdint.h>
 
 MODERNLIB_PUBLIC

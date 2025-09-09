@@ -3,6 +3,7 @@
 #include "modernlib/resmgmt.h"
 #include "modernlib/common_mem_ptr.h"
 #include "modernlib/allocator.h"
+#include "modernlib/utfconverter.h"
 
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
 #   include <windows.h>
