@@ -12,6 +12,7 @@
 #include "modernlib/allocator.h"
 #include "modernlib/basis.h"
 #include "modernlib/mem_ptr_macro.h"
+#include <string.h>
 
 /**
  * Typically, an object should be wrapped in a struct
@@ -47,6 +48,19 @@ static inline mem_ptr_alloc_result mem_ptr_funcname(allocate)(size_t n, const me
         .result.allocator = allocator, 
         .result.ptr = result.mem 
     };
+}
+
+/**
+ * Copy memory area
+ *
+ * n `mem_ptr_target_typename` is copied into `self + start_index`
+ */
+MODERNLIB_ALWAYS_INLINE
+static inline
+void mem_ptr_funcname(copy_from_raw)(const mem_ptr_typename self, size_t start_index, const mem_ptr_target_typename *raw, size_t n)
+{
+    mem_ptr_target_typename *start_addr = self.ptr + start_index;
+    memcpy(start_addr, raw, n * sizeof(mem_ptr_target_typename));
 }
 
 /**
