@@ -18,8 +18,5 @@ add_test(NAME mem_ptr_test
   COMMAND mem_ptr_test)
 
 add_executable(utfconverter_test utfconverter_test.c)
-if(NOT WIN32)
-  target_compile_options(utfconverter_test PRIVATE -fwide-exec-charset=UTF-16LE -fshort-wchar)
-endif()
 add_test(NAME utfconverter_test
   COMMAND utfconverter_test)
