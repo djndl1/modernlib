@@ -23,4 +23,13 @@ uint16_t *u16concat_allocator(const uint16_t *l, const uint16_t* r, const mem_al
 MODERNLIB_PUBLIC
 uint16_t *u16concat(const uint16_t *l, const uint16_t* r);
 
+MODERNLIB_PUBLIC
+uint16_t *u16cpy(uint16_t *restrict dest, const uint16_t *restrict src);
+
+MODERNLIB_PUBLIC
+uint16_t *u16cat(uint16_t *restrict dest, const uint16_t *restrict src);
+
+MODERNLIB_PUBLIC
+uint16_t *u16chr(const uint16_t *s, int c);
+
 #endif /* ifndef U16CHAR_H_ */

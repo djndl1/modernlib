@@ -3,6 +3,7 @@
 #include "modernlib/basis.h"
 #include "modernlib/common_mem_ptr.h"
 
+#include <stdint.h>
 #include <errno.h>
 #include <string.h>
 
@@ -57,4 +58,32 @@ uint16_t *u16concat_allocator(const uint16_t *l, const uint16_t* r, const mem_al
 uint16_t *u16concat(const uint16_t *l, const uint16_t* r)
 {
     return u16concat_allocator(l, r, std_allocator);
+}
+
+uint16_t *u16cpy(uint16_t *restrict d, const uint16_t *restrict s)
+{
+    uint16_t *dest = d;
+
+    while ((*dest = *s)) {
+        s++;
+        d++;
+    }
+
+	  return d;
+}
+
+uint16_t *u16cat(uint16_t *restrict dest, const uint16_t *restrict src)
+{
+    u16cpy(dest + u16len(dest), src);
+    return dest;
+}
+
+uint16_t *u16chr(const uint16_t *s, int c)
+{
+    uint16_t uc = (uint16_t)c;
+    if (!uc) return (uint16_t*)s + u16len(s);
+    
+    uint16_t *us = (uint16_t*)s;
+    for (; *us && *us != uc; us++);
+    return *us == uc ? us : nullptr;
 }
