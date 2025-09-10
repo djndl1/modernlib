@@ -19,6 +19,7 @@ set(libsrc
   src/dyn_cwstr.c
   src/utfconverter.c
   src/u16char.c
+  src/datetime.c
 )
 
 add_library(modernlib SHARED

@@ -20,3 +20,7 @@ add_test(NAME mem_ptr_test
 add_executable(utfconverter_test utfconverter_test.c)
 add_test(NAME utfconverter_test
   COMMAND utfconverter_test)
+
+add_executable(datetime_test datetime_test.c)
+add_test(NAME datetime_test
+  COMMAND datetime_test)

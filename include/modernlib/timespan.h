@@ -21,8 +21,8 @@ typedef struct timespan {
 } timespan;
 
 #define TS_TICK_RESOLUTION 100
-#define TS_TICKS_PER_MICROSECOND 10
-#define TS_TICKS_PER_MILLISECOND (10 * TS_TICKS_PER_MICROSECOND)
+#define TS_TICKS_PER_MICROSECOND 10UL
+#define TS_TICKS_PER_MILLISECOND (1000UL * TS_TICKS_PER_MICROSECOND)
 #define TS_TICKS_PER_SECOND (1000UL * TS_TICKS_PER_MILLISECOND)
 #define TS_TICKS_PER_MINUTE (60UL * TS_TICKS_PER_SECOND)
 #define TS_TICKS_PER_HOUR (60UL * TS_TICKS_PER_MINUTE)
@@ -37,10 +37,10 @@ typedef struct timespan {
 #define TIMESPAN_ZERO TIMESPAN_TICK(0)
 #define TIMESPAN_MIN TIMESPAN_TICK(INT64_MAX)
 #define TIMESPAN_MAX TIMESPAN_TICK(INT64_MIN)
-#define TIMESPAN_SECOND(n) timespan_from_ticks(n * TS_TICKS_PER_SECOND)
-#define TIMESPAN_MINUTE(n) timespan_from_ticks(n * TS_TICKS_PER_MINUTE)
-#define TIMESPAN_HOUR(n) timespan_from_ticks(n * TS_TICKS_PER_HOUR)
-#define TIMESPAN_DAY(n) timespan_from_ticks(n * TS_TICKS_PER_DAY)
+#define TIMESPAN_SECOND(n) timespan_from_ticks((n) * TS_TICKS_PER_SECOND)
+#define TIMESPAN_MINUTE(n) timespan_from_ticks((n) * TS_TICKS_PER_MINUTE)
+#define TIMESPAN_HOUR(n) timespan_from_ticks((n) * TS_TICKS_PER_HOUR)
+#define TIMESPAN_DAY(n) timespan_from_ticks((n) * TS_TICKS_PER_DAY)
 #define TIMESPAN(d, h, m, secs, msecs, usecs) _timespan_from(d, h, m, secs, msecs, usecs)
 
 MODERNLIB_ALWAYS_INLINE
