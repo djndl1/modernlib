@@ -1,6 +1,10 @@
 #ifndef U16CHAR_H_
 #define U16CHAR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "modernlib/allocator.h"
 #include "modernlib/common_mem_ptr.h"
 #include <stdint.h>
@@ -31,5 +35,9 @@ uint16_t *u16cat(uint16_t *restrict dest, const uint16_t *restrict src);
 
 MODERNLIB_PUBLIC
 uint16_t *u16chr(const uint16_t *s, int c);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ifndef U16CHAR_H_ */

@@ -49,7 +49,7 @@ void data_buffer_destroy(data_buffer *buf)
     buf->length = 0;
 }
 
-error_t data_buffer_resize(data_buffer *self, size_t newsize)
+merror data_buffer_resize(data_buffer *self, size_t newsize)
 {
     if (self->allocator == nullptr || self->allocator->reallocate == nullptr) {
         return E_INVALID_OPERATION;
@@ -92,7 +92,7 @@ bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t
     return memcmp(self.data, other.data, self_cmp_len) == 0;
 }
 
-error_t data_buffer_copy_to(const data_buffer self, data_buffer *target)
+merror data_buffer_copy_to(const data_buffer self, data_buffer *target)
 {
     if (self.data == nullptr || self.length == 0
          || target == nullptr || target->data == nullptr || target->length == 0) {
@@ -110,7 +110,7 @@ error_t data_buffer_copy_to(const data_buffer self, data_buffer *target)
     return E_OK;
 }
 
-error_t data_buffer_copy_content_from(data_buffer *self, const void *data, size_t byte_count)
+merror data_buffer_copy_content_from(data_buffer *self, const void *data, size_t byte_count)
 {
     if (self == nullptr) return E_INVALID_ARGS;
 

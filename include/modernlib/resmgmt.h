@@ -1,6 +1,10 @@
 #ifndef MODERNLIB_RESMGMT_H_
 #define MODERNLIB_RESMGMT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "modernlib/internal/compilers.h"
 #include "modernlib/macros.h"
 #include "modernlib/nullptr.h"
@@ -23,5 +27,9 @@
         int INTERNAL_VAR(_i_) = 0;  \
         !INTERNAL_VAR(_i_);                  \
         ((INTERNAL_VAR(_i_)) += 1), end)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MODERNLIB_RESMGMT_H_

@@ -23,4 +23,14 @@
 #  define MODERNLIB_PUBLIC
 #endif
 
+#ifdef __cplusplus
+#   if defined(__GNUC__)
+#       define restrict __restrict__
+#   elif defined (_MSC_VER)
+#       define restrct __restrict
+#   else
+#       define restrict
+#   endif
+#endif
+
 #endif // MODERNLIB_COMPILERS_H_

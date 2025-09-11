@@ -9,6 +9,10 @@
  * to improve functionality and better safety.
  * */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "modernlib/allocator.h"
 #include "modernlib/basis.h"
 #include "modernlib/mem_ptr_macro.h"
@@ -39,15 +43,16 @@ MODERNLIB_ALWAYS_INLINE
 static inline mem_ptr_alloc_result mem_ptr_funcname(allocate)(size_t n, const mem_allocator *const allocator)
 {
     mem_alloc_result result = allocate_n_item(allocator, n, sizeof(mem_ptr_target_typename));
+    mem_ptr_alloc_result ptr_result = { 0 };
     if (result.error) {
-        return (mem_ptr_alloc_result){ .error = result.error };
+        ptr_result.error = result.error;
+        return ptr_result;
     }
+    ptr_result.error = 0;
+    ptr_result.result.allocator = allocator;
+    ptr_result.result.ptr = (mem_ptr_target_typename*)result.mem;
 
-    return (mem_ptr_alloc_result){ 
-        .error = 0, 
-        .result.allocator = allocator, 
-        .result.ptr = result.mem 
-    };
+    return ptr_result;
 }
 
 /**
@@ -104,6 +109,10 @@ static inline void mem_ptr_funcname(destroy)(mem_ptr_typename *ptr)
     ptr->allocator = nullptr;
     ptr->ptr = nullptr;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef mem_ptr_typename
 #undef mem_ptr_target_typename

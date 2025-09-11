@@ -1,0 +1,20 @@
+#include "utest.h"
+
+#include "modernlib/common_mem_ptr.h"
+#include "modernlib/resmgmt.h"
+#include "modernlib/stopwatch.h"
+#include "modernlib/timespan.h"
+#include "modernlib/u16char.h"
+#include "modernlib/utfconverter.h"
+#include "modernlib/datetime.h"
+#include "modernlib/data_buffer.h"
+#include "modernlib/allocator.h"
+#include "modernlib/dyn_char_array.h"
+#include "modernlib/dyn_wchar_array.h"
+#include "modernlib/dyn_cstr.h"
+#include "modernlib/dyn_cwstr.h"
+#include "modernlib/errors.h"
+#include "modernlib/nullptr.h"
+#include "modernlib/macros.h"
+
+UTEST_MAIN();

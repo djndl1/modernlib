@@ -86,7 +86,7 @@ UTEST(DATA_BUFFER, copy_to)
             data_buffer copied;
             scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
                    data_buffer_destroy(&copied)) {
-                error_t e = data_buffer_copy_to(buf, &copied);
+                merror e = data_buffer_copy_to(buf, &copied);
                 EXPECT_EQ(e.error, 0);
 
                 for (size_t j = 0; j < copied.length; j++) {
@@ -96,7 +96,7 @@ UTEST(DATA_BUFFER, copy_to)
 
             scoped(copied = data_buffer_new(buf.length / 2, std_allocator).buffer,
                    data_buffer_destroy(&copied)) {
-                error_t e = data_buffer_copy_to(buf, &copied);
+                merror e = data_buffer_copy_to(buf, &copied);
                 EXPECT_EQ(e.error, 0);
 
                 for (size_t j = 0; j < copied.length; j++) {
@@ -106,7 +106,7 @@ UTEST(DATA_BUFFER, copy_to)
 
             scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
                    data_buffer_destroy(&copied)) {
-                error_t e = data_buffer_copy_to(buf, &copied);
+                merror e = data_buffer_copy_to(buf, &copied);
 
                 EXPECT_EQ(e.error, 0);
             }
@@ -173,7 +173,7 @@ UTEST(DATA_BUFFER, copy_content_from)
             data_buffer copied;
             scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
                    data_buffer_destroy(&copied)) {
-                error_t e = data_buffer_copy_content_from(&copied, buf.data, buf.length);
+                merror e = data_buffer_copy_content_from(&copied, buf.data, buf.length);
                 EXPECT_EQ(e.error, 0);
 
                 for (size_t j = 0; j < copied.length; j++) {
@@ -183,7 +183,7 @@ UTEST(DATA_BUFFER, copy_content_from)
 
             scoped(copied = data_buffer_new(buf.length / 2, std_allocator).buffer,
                    data_buffer_destroy(&copied)) {
-                error_t e = data_buffer_copy_content_from(&copied, buf.data, buf.length);
+                merror e = data_buffer_copy_content_from(&copied, buf.data, buf.length);
                 EXPECT_EQ(e.error, 0);
 
                 for (size_t j = 0; j < copied.length; j++) {
@@ -193,7 +193,7 @@ UTEST(DATA_BUFFER, copy_content_from)
 
             scoped(copied = data_buffer_new(buf.length, std_allocator).buffer,
                    data_buffer_destroy(&copied)) {
-                error_t e = data_buffer_copy_content_from(&copied, buf.data, 0);
+                merror e = data_buffer_copy_content_from(&copied, buf.data, 0);
 
                 EXPECT_EQ(e.error, 0);
             }

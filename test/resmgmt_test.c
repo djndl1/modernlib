@@ -6,10 +6,10 @@
 
 UTEST(RES_MGMT, MOVE_RES)
 {
-    error_t e1 = { 1 };
-    error_t e2 = { 0 };
+    merror e1 = { 1 };
+    merror e2 = { 0 };
 
-    move_res(e1, e2, (error_t){0});
+    move_res(e1, e2, (merror){0});
     EXPECT_EQ(e1.error, 0);
     EXPECT_EQ(e2.error, 1);
 }

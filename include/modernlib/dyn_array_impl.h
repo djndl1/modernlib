@@ -30,7 +30,7 @@ dyn_array_result_type_name dyn_array_func(from_data)(const void *data,
     }
     dyn_array_type_name newarr = creation_result.array;
 
-    error_t err = data_buffer_copy_content_from(&newarr._data, data, count * sizeof(dyn_array_element_type));
+    merror err = data_buffer_copy_content_from(&newarr._data, data, count * sizeof(dyn_array_element_type));
     if (err.error) {
         data_buffer_destroy(&newarr._data);
         return (dyn_array_result_type_name) { .error = err.error };
@@ -85,7 +85,7 @@ dyn_array_result_type_name dyn_array_func(from_array)(const dyn_array_type_name 
 
 #define dyn_array_get_directp(pself, idx)  (dyn_array_func(get_data)(*self)[idx])
 
-error_t dyn_array_func(overwrite_at)(const dyn_array_type_name self,
+merror dyn_array_func(overwrite_at)(const dyn_array_type_name self,
                                      size_t begin_index,
                                      const dyn_array_element_type *source,
                                      size_t count)
@@ -122,7 +122,7 @@ dyn_array_result_type_name dyn_array_func(concat)(const dyn_array_type_name one,
     dyn_array_type_name arr = newarr_result.array;
 
     arr._len = len_one;
-    error_t err1 = dyn_array_func(overwrite_at)(arr,
+    merror err1 = dyn_array_func(overwrite_at)(arr,
                                                 0,
                                                 dyn_array_func(get_data)(one),
                                                 len_one);
@@ -132,7 +132,7 @@ dyn_array_result_type_name dyn_array_func(concat)(const dyn_array_type_name one,
     }
 
     arr._len += len_two;
-    error_t err2 = dyn_array_func(overwrite_at)(arr,
+    merror err2 = dyn_array_func(overwrite_at)(arr,
                                                 len_one,
                                                 dyn_array_func(get_data)(two),
                                                 len_two);
@@ -159,7 +159,7 @@ dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name sel
     };
 }
 
-error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value)
+merror dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value)
 {
     if (idx >= dyn_array_func(size)(self)) {
         return E_INVALID_ARGS;
@@ -174,14 +174,14 @@ void dyn_array_func(destroy)(dyn_array_type_name *self)
     data_buffer_destroy(&self->_data);
 }
 
-error_t dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity)
+merror dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity)
 {
     size_t cur_capacity = dyn_array_func(capacity)(*self);
     if (capacity > cur_capacity) {
         size_t newsize = cur_capacity == 0
             ? sizeof(dyn_array_element_type) * capacity
             : (capacity / cur_capacity + 1) * self->_data.length;
-        error_t resize_status = data_buffer_resize(&(self->_data), newsize);
+        merror resize_status = data_buffer_resize(&(self->_data), newsize);
 
         if (resize_status.error) {
             return resize_status;
@@ -190,12 +190,12 @@ error_t dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capaci
     return E_OK;
 }
 
-error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item)
+merror dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item)
 {
     return dyn_array_func(insert)(self, self->_len, item);
 }
 
-error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*))
+merror dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*))
 {
     if (self == nullptr) return E_INVALID_ARGS;
 
@@ -209,7 +209,7 @@ error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_
     return E_OK;
 }
 
-error_t dyn_array_func(remove_at)(dyn_array_type_name *self, size_t idx, void (*destructor)(dyn_array_element_type*))
+merror dyn_array_func(remove_at)(dyn_array_type_name *self, size_t idx, void (*destructor)(dyn_array_element_type*))
 {
     if (self == nullptr) return E_INVALID_ARGS;
     if (idx >= self->_len) return E_OUT_OF_RANGE;
@@ -227,14 +227,14 @@ error_t dyn_array_func(remove_at)(dyn_array_type_name *self, size_t idx, void (*
     return E_OK;
 }
 
-error_t dyn_array_func(insert)(dyn_array_type_name *self,
+merror dyn_array_func(insert)(dyn_array_type_name *self,
                                size_t idx,
                                const dyn_array_element_type item)
 {
     if (self == nullptr) return E_INVALID_ARGS;
     if (idx > self->_len) return E_OUT_OF_RANGE;
 
-    error_t err = dyn_array_func(ensure_capacity)(self, self->_len + 1);
+    merror err = dyn_array_func(ensure_capacity)(self, self->_len + 1);
     if (err.error) {
         return err;
     }
@@ -263,7 +263,7 @@ bool dyn_array_func(remove)(dyn_array_type_name *self,
         return false;
     }
 
-    error_t err = dyn_array_func(remove_at)(self, find_result.index, destructor);
+    merror err = dyn_array_func(remove_at)(self, find_result.index, destructor);
     if (err.error) {
         return false;
     }

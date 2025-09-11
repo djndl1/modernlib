@@ -77,15 +77,15 @@ static inline timespan timespan_minus(const timespan self, const timespan b)
 }
 
 MODERNLIB_ALWAYS_INLINE
-static inline timespan timespanimes(const timespan self, double factor)
+static inline timespan timespan_times(const timespan self, double factor)
 {
-    return TIMESPAN_TICK(self._ticks * factor);
+    return TIMESPAN_TICK((int64_t)(self._ticks * factor));
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_divided_by(const timespan self, double factor)
 {
-    return TIMESPAN_TICK((double)self._ticks / factor );
+    return TIMESPAN_TICK((int64_t)((double)self._ticks / factor));
 }
 
 MODERNLIB_ALWAYS_INLINE

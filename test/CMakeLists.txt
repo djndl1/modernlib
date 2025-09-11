@@ -24,3 +24,5 @@ add_test(NAME utfconverter_test
 add_executable(datetime_test datetime_test.c)
 add_test(NAME datetime_test
   COMMAND datetime_test)
+
+add_executable(cpp_build_test cpp_build_test.cpp)

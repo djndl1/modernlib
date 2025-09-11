@@ -1,27 +1,22 @@
-#include "modernlib/datetime.h"
-
 #if defined(__MINGW64__) || defined(__MINGW32__) || defined (_MSC_VER)
 #include <windows.h>
 
     #define timegm _mkgmtime
-    #define localtime_s(a, b) (localtime_s(b, a))
-    #define gmtime_s(a, b) (gmtime_s(b, a))
-    #define sleep(s) (Sleep)(s * 1000)
-#elif defined(__STDC_LIB_EXT1__)
-    #define __STDC_WANT_LIB_EXT1__ 1
-#else
-#define _XOPEN_SOURCE 700
-#include <unistd.h>
+    #define localtime_r(a, b) (localtime_s(b, a))
 
-    #define localtime_s(a, b) (localtime_r(a, b))
-    #define gmtime_s(a, b) (gmtime_r(a, b))
+#else
+    #define _DEFAULT_SOURCE 1
+    #define _GNU_SOURCE 1
+    #include <time.h>
+    #define _XOPEN_SOURCE 700
+    #include <unistd.h>
 #endif
 
 #if defined(__ANDROID__)  && __ANDROID_API__ < 29
     #define timespec_get(ts, base) clock_gettime(CLOCK_REALTIME, ts)
 #endif
 
-#include <time.h>
+#include "modernlib/datetime.h"
 
 static struct timespec get_utcnow(void)
 {
@@ -45,10 +40,19 @@ datetime datetime_now(void)
     time_t seconds = utcnow._c11time.tv_sec;
 
     struct tm brokendown = { 0 };
-    localtime_s(&seconds, &brokendown);
-    time_t now_seconds = timegm(&brokendown);
+    localtime_r(&seconds, &brokendown);
+
+    time_t now_seconds;
+    long diff;
+#if defined(__GLIBC__)  || defined(__ANDROID__) || defined(_GNU_SOURCE)
+    diff = brokendown.tm_gmtoff;
+    now_seconds = seconds + diff;
+#else
+    now_seconds = timegm(&brokendown);
+    diff = now_seconds - seconds;
+#endif
 
     utcnow._c11time.tv_sec = now_seconds;
-    utcnow.offset_from_utc = TIMESPAN_SECOND(now_seconds - seconds);
+    utcnow.offset_from_utc = TIMESPAN_SECOND(diff);
     return utcnow;
 }

@@ -62,16 +62,16 @@ MODERNLIB_PUBLIC
 dyn_array_get_result_type_name dyn_array_func(get)(const dyn_array_type_name self, size_t idx);
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value);
+merror dyn_array_func(set)(const dyn_array_type_name self, size_t idx, dyn_array_element_type value);
 
 MODERNLIB_PUBLIC
 void dyn_array_func(destroy)(dyn_array_type_name *self);
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item);
+merror dyn_array_func(append)(dyn_array_type_name *self, dyn_array_element_type item);
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
+merror dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
 
 MODERNLIB_PUBLIC
 find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
@@ -102,13 +102,13 @@ static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_nam
 }
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(overwrite_at)(const dyn_array_type_name self,
+merror dyn_array_func(overwrite_at)(const dyn_array_type_name self,
                                      size_t begin_index,
                                      const dyn_array_element_type *source,
                                      size_t count);
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity);
+merror dyn_array_func(ensure_capacity)(dyn_array_type_name *self, size_t capacity);
 
 MODERNLIB_PUBLIC
 find_array_index_result dyn_array_func(find_index_of)(const dyn_array_type_name self,
@@ -122,7 +122,7 @@ bool dyn_array_func(contains)(const dyn_array_type_name self,
                               int (*comparer)(const dyn_array_element_type, const dyn_array_element_type));
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(remove_at)(dyn_array_type_name *self,
+merror dyn_array_func(remove_at)(dyn_array_type_name *self,
                                   size_t idx,
                                   void (*destructor)(dyn_array_element_type*));
 
@@ -138,12 +138,12 @@ bool dyn_array_func(remove)(dyn_array_type_name *self,
                             void (*destructor)(dyn_array_element_type*));
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(insert)(dyn_array_type_name *self,
+merror dyn_array_func(insert)(dyn_array_type_name *self,
                                size_t idx,
                                const dyn_array_element_type item);
 
 MODERNLIB_PUBLIC
-error_t dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
+merror dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
 
 #undef dyn_array_element_type
 #undef dyn_array_type_name
