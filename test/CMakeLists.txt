@@ -1,3 +1,5 @@
+set(CMAKE_CXX_STANDARD 23)
+
 include_directories(AFTER ${CMAKE_SOURCE_DIR}/test)
 link_libraries(modernlib)
 

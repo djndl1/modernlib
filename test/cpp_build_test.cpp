@@ -1,5 +1,3 @@
-#include "utest.h"
-
 #include "modernlib/common_mem_ptr.h"
 #include "modernlib/resmgmt.h"
 #include "modernlib/stopwatch.h"
@@ -16,5 +14,7 @@
 #include "modernlib/errors.h"
 #include "modernlib/nullptr.h"
 #include "modernlib/macros.h"
+
+#include "utest.h"
 
 UTEST_MAIN();

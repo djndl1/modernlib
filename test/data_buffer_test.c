@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#undef nullptr 
+#define nullptr NULL
 #include "utest.h"
 
 #define M_COUNT(n) (n * 1000000)

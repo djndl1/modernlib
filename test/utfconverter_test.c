@@ -4,6 +4,8 @@
 #include "modernlib/u16char.h"
 #include "modernlib/utfconverter.h"
 
+#undef nullptr 
+#define nullptr NULL
 #include"utest.h"
 
 UTEST(UTFETest, BasicAssumptions) {

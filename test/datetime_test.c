@@ -1,5 +1,5 @@
-#include "utest.h"
 #include <modernlib/datetime.h>
+#include "utest.h"
 
 UTEST(DATETIME, NOW) {
     datetime now = datetime_now();
