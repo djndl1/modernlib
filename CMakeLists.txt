@@ -20,6 +20,8 @@ set(libsrc
   src/utfconverter.c
   src/u16char.c
   src/datetime.c
+  src/arithmetic.c
+  src/numerics.c
 )
 
 add_library(modernlib SHARED
