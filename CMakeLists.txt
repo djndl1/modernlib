@@ -22,6 +22,7 @@ set(libsrc
   src/datetime.c
   src/arithmetic.c
   src/numerics.c
+  src/reinterpret.c
 )
 
 add_library(modernlib SHARED
