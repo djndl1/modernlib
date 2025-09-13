@@ -36,7 +36,7 @@ datetime datetime_utc_now(void)
 
 #include <stdio.h>
 
-static int64_t local_offset_seconds_from_utc(time_t seconds)
+static int64_t local_offset_seconds_from_utc()
 {
     int64_t diff;
 #if defined(MODERNLIB_WINDOWS_TARGET)
@@ -45,6 +45,7 @@ static int64_t local_offset_seconds_from_utc(time_t seconds)
     diff = 60 * -tzinfo.Bias;
 #else
     struct tm brokendown = { 0 };
+    time_t seconds = 0;
     #if defined(__GLIBC__)  || defined(__ANDROID__) || defined(_GNU_SOURCE)
         localtime_r(&seconds, &brokendown);
         diff = brokendown.tm_gmtoff;
@@ -63,7 +64,7 @@ datetime datetime_now(void)
 
     time_t seconds = utcnow._c11time.tv_sec;
 
-    int64_t diff = local_offset_seconds_from_utc(seconds);
+    int64_t diff = local_offset_seconds_from_utc();
     time_t now_seconds = seconds + diff;
 
     utcnow._c11time.tv_sec = now_seconds;
