@@ -1,6 +1,7 @@
-#if defined(__MINGW64__) || defined(__MINGW32__) || defined (_MSC_VER)
-#include <windows.h>
+#include "modernlib/internal/compilers.h"
 
+#if defined (MODERNLIB_WINDOWS_TARGET)
+#include <windows.h>
     #define timegm _mkgmtime
     #define localtime_r(a, b) (localtime_s(b, a))
 
@@ -33,24 +34,37 @@ datetime datetime_utc_now(void)
     return datetime_from_timespec(ts);
 }
 
+#include <stdio.h>
+
+static int64_t local_offset_seconds_from_utc(time_t seconds)
+{
+    int64_t diff;
+#if defined(MODERNLIB_WINDOWS_TARGET)
+    TIME_ZONE_INFORMATION tzinfo = { 0 };
+    GetTimeZoneInformation(&tzinfo);
+    diff = 60 * -tzinfo.Bias;
+#else
+    struct tm brokendown = { 0 };
+    #if defined(__GLIBC__)  || defined(__ANDROID__) || defined(_GNU_SOURCE)
+        localtime_r(&seconds, &brokendown);
+        diff = brokendown.tm_gmtoff;
+    #else
+        localtime_r(&seconds, &brokendown);
+        time_t now_seconds = timegm(&brokendown);
+        diff = now_seconds - seconds;
+    #endif
+#endif
+    return diff;
+}
+
 datetime datetime_now(void)
 {
     datetime utcnow = datetime_utc_now();
 
     time_t seconds = utcnow._c11time.tv_sec;
 
-    struct tm brokendown = { 0 };
-    localtime_r(&seconds, &brokendown);
-
-    time_t now_seconds;
-    long diff;
-#if defined(__GLIBC__)  || defined(__ANDROID__) || defined(_GNU_SOURCE)
-    diff = brokendown.tm_gmtoff;
-    now_seconds = seconds + diff;
-#else
-    now_seconds = timegm(&brokendown);
-    diff = now_seconds - seconds;
-#endif
+    int64_t diff = local_offset_seconds_from_utc(seconds);
+    time_t now_seconds = seconds + diff;
 
     utcnow._c11time.tv_sec = now_seconds;
     utcnow.offset_from_utc = TIMESPAN_SECOND(diff);
