@@ -6,7 +6,6 @@ include_directories(AFTER ${modernlib_SOURCE_DIR}/include)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(libsrc
@@ -22,6 +21,7 @@ set(libsrc
 add_library(modernlib SHARED
   ${libsrc}
 )
+set_property(TARGET modernlib PROPERTY C_EXTENSIONS OFF)
 
 if(MSVC)
   target_compile_options(modernlib PRIVATE /Wall)
@@ -44,6 +44,7 @@ add_library(modernlib_static STATIC
   ${libsrc}
 )
 target_compile_definitions(modernlib_static PRIVATE MODERNLIB_STATIC_BUILD)
+set_property(TARGET modernlib_static PROPERTY C_EXTENSIONS OFF)
 
 enable_testing()
 subdirs(test)

@@ -1,6 +1,7 @@
 #include "modernlib/resmgmt.h"
 #include <utest.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "modernlib/basis.h"
 
 
@@ -25,5 +26,26 @@ UTEST(RES_MGMT, MOVE_PTR)
     EXPECT_EQ(p2, &b);
     EXPECT_EQ(p1, nullptr);
 }
+
+#ifdef __GNUC__
+
+void inner_scope(int *a)
+{
+    defer_stmt {
+        *a = 0;
+        printf("a set to 0\n");
+    };
+}
+
+UTEST(RES_MGMT, GNU_DEFER) 
+{
+    int a = 1;
+
+    inner_scope(&a);
+
+    EXPECT_EQ(0, a);
+}
+
+#endif
 
 UTEST_MAIN();

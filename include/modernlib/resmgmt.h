@@ -24,4 +24,48 @@
         !INTERNAL_VAR(_i_);                  \
         ((INTERNAL_VAR(_i_)) += 1), end)
 
+
+#ifdef __GNUC__
+/*
+ * from https://gustedt.wordpress.com/2025/01/06/simple-defer-ready-to-use/
+ */
+
+#define gnu_defer __GNU_DEFER(__COUNTER__)
+#define __GNU_DEFER(N) __GNU_DEFER_(N)
+#define __GNU_DEFER_(N) __GNU_DEFER__(__DEFER_FUNCTION_ ## N, __DEFER_VARIABLE_ ## N)
+
+#define __GNU_DEFER__(F, V)      \
+    auto void F(int*);         \
+    __attribute__((cleanup(F))) int V; \
+    auto void F(int*)
+
+#endif
+
+#if defined(__cplusplus)
+
+template<typename T>
+struct __df_st  : T {
+    MODERNLIB_ALWAYS_INLINE
+    inline __df_st(T g) : T(g) { }
+    MODERNLIB_ALWAYS_INLINE
+    inline ~__df_st() 
+    {
+      T::operator()();
+    }
+};
+ 
+#define cpp_defer __CPP_DEFER(__COUNTER__)
+#define __CPP_DEFER(N) __CPP_DEFER_(N)
+#define __CPP_DEFER_(N) __CPP_DEFER__(__DEFER_VARIABLE_ ## N)
+#define __CPP_DEFER__(V)  __df_st const V = [&](void)->void
+
+#endif
+
+
+#if defined(cpp_defer)
+    #define defer_stmt cpp_defer
+#elif defined(gnu_defer)
+    #define defer_stmt gnu_defer
+#endif
+
 #endif // MODERNLIB_RESMGMT_H_
