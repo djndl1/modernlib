@@ -23,8 +23,12 @@
         int INTERNAL_VAR(_i_) = 0;  \
         !INTERNAL_VAR(_i_);                  \
         ((INTERNAL_VAR(_i_)) += 1), end)
+#ifdef MODERNLIB_USE_DEFER_STMT
 
-#if !defined(__cplusplus) && defined(__clang__) && MODERNLIB_USE_CLANG_BLOCKS 
+#if !defined(__cplusplus) && defined(__clang__) 
+#ifndef MODERNLIB_USE_CLANG_BLOCKS
+    #error "defer_stmt with clang requires BlocksRuntime or libobjc with the -fblocks compiler option and then MODERNLIB_USE_CLANG_BLOCKS should be defined to continue!"
+#endif
 
 typedef void (^__clang_cleanup_block)(void);
 
@@ -82,5 +86,7 @@ struct __df_st  : T {
 #elif defined(gnu_defer)
     #define defer_stmt gnu_defer
 #endif
+
+#endif // MODERNLIB_USE_DEFER_STMT
 
 #endif // MODERNLIB_RESMGMT_H_

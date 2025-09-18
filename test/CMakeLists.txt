@@ -1,5 +1,3 @@
-include(CheckLibraryExists)
-
 set(CMAKE_CXX_STANDARD 23)
 if (BUILD_TESTS_AS_CXX)
   set_source_files_properties(
@@ -13,20 +11,30 @@ if (BUILD_TESTS_AS_CXX)
     )
 endif()
 
-# more robust check
+# an example of using defer_stmt
+# TODO more robust check
+include(CheckLibraryExists)
 check_library_exists(objc _NSConcreteStackBlock "" HAVE_OBJC_LIB)
 check_library_exists(BlocksRuntime _NSConcreteStackBlock "" HAVE_BLOCKSRUNTIME_LIB)
 
-if ((${CMAKE_C_COMPILER_ID} STREQUAL "Clang"))
-  message(WARNING ${CMAKE_C_COMPILER_ID})
-  add_compile_definitions(MODERNLIB_USE_CLANG_BLOCKS)
-  add_compile_options(-fblocks)
-  if (${HAVE_OBJC_LIB})
-    link_libraries(objc)
-  elseif(${HAVE_BLOCKSRUNTIME_LIB})
-    link_libraries(BlocksRuntime)
+set(MODERNLIB_USE_DEFER_STMT ON)
+
+if (${MODERNLIB_USE_DEFER_STMT})
+  add_compile_definitions(MODERNLIB_USE_DEFER_STMT) 
+  if (${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
+    add_compile_definitions(MODERNLIB_USE_CLANG_BLOCKS)
+    add_compile_options(-fblocks)
+    if (${HAVE_OBJC_LIB})
+      link_libraries(objc)
+    elseif(${HAVE_BLOCKSRUNTIME_LIB})
+      link_libraries(BlocksRuntime)
+    else()
+      message(FATAL_ERROR )
+    endif()
   endif()
 endif()
+
+
 
 include_directories(AFTER ${CMAKE_SOURCE_DIR}/test)
 link_libraries(modernlib)
