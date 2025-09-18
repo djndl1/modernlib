@@ -1,14 +1,15 @@
 #ifndef MODERNLIB_ALLOCATOR_H_
 #define MODERNLIB_ALLOCATOR_H_
 
+#include "modernlib/basis.h"
+#include "modernlib/internal/compilers.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stddef.h>
 #include <errno.h>
-#include "modernlib/basis.h"
-#include "modernlib/internal/compilers.h"
 
 typedef struct mem_alloc_result {
     int error;

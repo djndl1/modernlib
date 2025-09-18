@@ -24,7 +24,6 @@
         !INTERNAL_VAR(_i_);                  \
         ((INTERNAL_VAR(_i_)) += 1), end)
 
-
 #ifdef __GNUC__
 /*
  * from https://gustedt.wordpress.com/2025/01/06/simple-defer-ready-to-use/
@@ -60,7 +59,6 @@ struct __df_st  : T {
 #define __CPP_DEFER__(V)  __df_st const V = [&](void)->void
 
 #endif
-
 
 #if defined(cpp_defer)
     #define defer_stmt cpp_defer

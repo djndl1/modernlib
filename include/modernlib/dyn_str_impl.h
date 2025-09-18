@@ -19,7 +19,7 @@ static dyn_string_result_type_name _create_dyn_str_from_data(const void *data,
     }
 
     dyn_string_internal_array_type arr = arr_result.array;
-    error_t err = dyn_string_internal_array_func(set)(arr, count, 0);
+    merror err = dyn_string_internal_array_func(set)(arr, count, 0);
     if (err.error) {
         dyn_string_internal_array_func(destroy)(&arr);
         return (dyn_string_result_type_name){ .error = err.error };
@@ -131,14 +131,14 @@ dyn_string_result_type_name dyn_string_func(concat)(const dyn_string_type_name o
     dyn_string_internal_array_type arr = newarr_result.array;
     arr._len = len_concat + 1;
 
-    error_t err1 = dyn_string_internal_array_func(overwrite_at)(
+    merror err1 = dyn_string_internal_array_func(overwrite_at)(
         arr, 0, dyn_string_internal_array_func(get_data)(one._char_array), len_one);
     if (err1.error) {
         dyn_string_internal_array_func(destroy)(&arr);
         return (dyn_string_result_type_name){ .error = err1.error };
     }
 
-    error_t err2 = dyn_string_internal_array_func(overwrite_at)(
+    merror err2 = dyn_string_internal_array_func(overwrite_at)(
         arr, len_one, dyn_string_internal_array_func(get_data)(two._char_array), len_two);
     if (err2.error) {
         dyn_string_internal_array_func(destroy)(&arr);

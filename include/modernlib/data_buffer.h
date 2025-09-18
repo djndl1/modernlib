@@ -1,6 +1,10 @@
 #ifndef MODERNLIB_BUFFER_H_
 #define MODERNLIB_BUFFER_H_
 
+#include "modernlib/basis.h"
+#include "modernlib/errors.h"
+#include "modernlib/allocator.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -9,9 +13,6 @@ extern "C" {
 #include <stddef.h>
 
 #include <stdbool.h>
-#include "basis.h"
-#include "modernlib/errors.h"
-#include "modernlib/allocator.h"
 
 /**
  * A data buffer a chunk of memory. It contains a pointer to an allocator
@@ -57,14 +58,14 @@ buffer_alloc_result data_buffer_move_from(void **data,
                                           const mem_allocator *const allocator);
 
 MODERNLIB_PUBLIC
-error_t data_buffer_copy_content_from(data_buffer *self, const void *data, size_t byte_count);
+merror data_buffer_copy_content_from(data_buffer *self, const void *data, size_t byte_count);
 
 
 MODERNLIB_PUBLIC
-error_t data_buffer_copy_to(const data_buffer, data_buffer*);
+merror data_buffer_copy_to(const data_buffer, data_buffer*);
 
 MODERNLIB_PUBLIC
-error_t data_buffer_resize(data_buffer *self, size_t newsize);
+merror data_buffer_resize(data_buffer *self, size_t newsize);
 
 MODERNLIB_PUBLIC
 bool data_buffer_compare(const data_buffer self, const data_buffer other, size_t count);
@@ -106,19 +107,21 @@ static inline buffer_alloc_result data_buffer_copy(const data_buffer source)
 {
     buffer_alloc_result newresult = data_buffer_new(source.length, source.allocator);
     if (newresult.error) {
-        return (buffer_alloc_result){ .error = newresult.error };
+        return newresult;
     }
 
-    error_t e = data_buffer_copy_to(source, &newresult.buffer);
+    merror e = data_buffer_copy_to(source, &newresult.buffer);
     if (e.error) {
         data_buffer_destroy(&newresult.buffer);
-        return (buffer_alloc_result){ .error = e.error };
+        buffer_alloc_result copy_result = { 0  };
+        copy_result.error = e.error;
+        return copy_result;
     }
 
-    return (buffer_alloc_result){
-        .buffer =  data_buffer_move(&newresult.buffer),
-        .error = 0,
-    };
+    buffer_alloc_result alloc_result = { 0 };
+    alloc_result.buffer = data_buffer_move(&newresult.buffer);
+    alloc_result.error = 0;
+    return alloc_result;
 }
 
 #ifdef __cplusplus

@@ -1,3 +1,5 @@
+set(CMAKE_CXX_STANDARD 23)
+
 include_directories(AFTER ${CMAKE_SOURCE_DIR}/test)
 link_libraries(modernlib)
 
@@ -21,3 +23,13 @@ add_test(NAME data_buffer_test
 add_executable(mem_ptr_test mem_ptr_test.c)
 add_test(NAME mem_ptr_test
   COMMAND mem_ptr_test)
+
+add_executable(utfconverter_test utfconverter_test.c)
+add_test(NAME utfconverter_test
+  COMMAND utfconverter_test)
+
+add_executable(datetime_test datetime_test.c)
+add_test(NAME datetime_test
+  COMMAND datetime_test)
+
+add_executable(cpp_build_test cpp_build_test.cpp)

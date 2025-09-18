@@ -1,15 +1,17 @@
 #ifndef MODERNLIB_TIMESPAN_H_
 #define MODERNLIB_TIMESPAN_H_
 
+#include "modernlib/internal/compilers.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <time.h>
+#include <sys/time.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include "modernlib/internal/compilers.h"
 
 #ifdef _MSC_VER
 #include <winsock.h>
@@ -20,12 +22,12 @@ typedef struct timespan {
 } timespan;
 
 #define TS_TICK_RESOLUTION 100
-#define TS_TICKS_PER_MICROSECOND 10
-#define TS_TICKS_PER_MILLISECOND (10 * TS_TICKS_PER_MICROSECOND)
-#define TS_TICKS_PER_SECOND (1000UL * TS_TICKS_PER_MILLISECOND)
-#define TS_TICKS_PER_MINUTE (60UL * TS_TICKS_PER_SECOND)
-#define TS_TICKS_PER_HOUR (60UL * TS_TICKS_PER_MINUTE)
-#define TS_TICKS_PER_DAY (24UL * TS_TICKS_PER_HOUR)
+#define TS_TICKS_PER_MICROSECOND 10ULL
+#define TS_TICKS_PER_MILLISECOND (1000ULL * TS_TICKS_PER_MICROSECOND)
+#define TS_TICKS_PER_SECOND (1000ULL * TS_TICKS_PER_MILLISECOND)
+#define TS_TICKS_PER_MINUTE (60ULL * TS_TICKS_PER_SECOND)
+#define TS_TICKS_PER_HOUR (60ULL * TS_TICKS_PER_MINUTE)
+#define TS_TICKS_PER_DAY (24ULL * TS_TICKS_PER_HOUR)
 
 #ifdef __cplusplus
 #  define TIMESPAN_TICK(tick) timespan{ tick }
@@ -36,10 +38,10 @@ typedef struct timespan {
 #define TIMESPAN_ZERO TIMESPAN_TICK(0)
 #define TIMESPAN_MIN TIMESPAN_TICK(INT64_MAX)
 #define TIMESPAN_MAX TIMESPAN_TICK(INT64_MIN)
-#define TIMESPAN_SECOND(n) timespan_from_ticks(n * TS_TICKS_PER_SECOND)
-#define TIMESPAN_MINUTE(n) timespan_from_ticks(n * TS_TICKS_PER_MINUTE)
-#define TIMESPAN_HOUR(n) timespan_from_ticks(n * TS_TICKS_PER_HOUR)
-#define TIMESPAN_DAY(n) timespan_from_ticks(n * TS_TICKS_PER_DAY)
+#define TIMESPAN_SECOND(n) timespan_from_ticks((n) * TS_TICKS_PER_SECOND)
+#define TIMESPAN_MINUTE(n) timespan_from_ticks((n) * TS_TICKS_PER_MINUTE)
+#define TIMESPAN_HOUR(n) timespan_from_ticks((n) * TS_TICKS_PER_HOUR)
+#define TIMESPAN_DAY(n) timespan_from_ticks((n) * TS_TICKS_PER_DAY)
 #define TIMESPAN(d, h, m, secs, msecs, usecs) _timespan_from(d, h, m, secs, msecs, usecs)
 
 MODERNLIB_ALWAYS_INLINE
@@ -76,15 +78,15 @@ static inline timespan timespan_minus(const timespan self, const timespan b)
 }
 
 MODERNLIB_ALWAYS_INLINE
-static inline timespan timespanimes(const timespan self, double factor)
+static inline timespan timespan_times(const timespan self, double factor)
 {
-    return TIMESPAN_TICK(self._ticks * factor);
+    return TIMESPAN_TICK((int64_t)(self._ticks * factor));
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline timespan timespan_divided_by(const timespan self, double factor)
 {
-    return TIMESPAN_TICK((double)self._ticks / factor );
+    return TIMESPAN_TICK((int64_t)((double)self._ticks / factor));
 }
 
 MODERNLIB_ALWAYS_INLINE

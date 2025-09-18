@@ -2,6 +2,8 @@
 #include "modernlib/dyn_cwstr.h"
 #include "modernlib/basis.h"
 
+#undef nullptr 
+#define nullptr NULL
 #include "utest.h"
 
 

@@ -4,7 +4,7 @@ project(modernlib)
 
 include_directories(AFTER ${modernlib_SOURCE_DIR}/include)
 
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -16,6 +16,12 @@ set(libsrc
   src/dyn_wchar_array.c
   src/dyn_char_array.c
   src/dyn_cwstr.c
+  src/utfconverter.c
+  src/u16char.c
+  src/datetime.c
+  src/arithmetic.c
+  src/numerics.c
+  src/reinterpret.c
 )
 
 add_library(modernlib SHARED
@@ -35,6 +41,10 @@ else()
   if($<CONFIG> STREQUAL "Debug")
     target_compile_options(modernlib PRIVATE -fsanitize=address)
   endif()
+endif()
+
+if(ANDROID)
+  target_link_libraries(modernlib PRIVATE iconv)
 endif()
 
 target_compile_definitions(modernlib PRIVATE MODERNLIB_SHARED_BUILD)

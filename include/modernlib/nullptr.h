@@ -1,13 +1,16 @@
-#ifndef NULLPTR_H_
-#define NULLPTR_H_
+#ifndef MODERNLIB_NULLPTR_H_
+#define MODERNLIB_NULLPTR_H_
 
-#if ((__cplusplus >= 201103L) || (__STDC_VERSION__ >= 202311L)) && defined(nullptr)
-    #undef nullptr
+#if __cplusplus 
+		#if (__cplusplus < 201103L) && !defined(nullptr)
+        #include <cstddef>
+        #define nullptr NULL
+		#endif
 #else
-    #ifndef nullptr
+		#if (__STDC_VERSION__ < 202311L) && !defined(nullptr)
         #include <stddef.h>
         #define nullptr NULL
-    #endif
+		#endif
 #endif
 
-#endif // NULLPTR_H_
+#endif // MODERNLIB_NULLPTR_H_

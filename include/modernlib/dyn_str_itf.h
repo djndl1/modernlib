@@ -21,6 +21,10 @@
 #include "modernlib/internal/compilers.h"
 #include "modernlib/dyn_str_macro.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct dyn_string_type_name {
     dyn_string_internal_array_type _char_array;
 } dyn_string_type_name;
@@ -135,3 +139,8 @@ static inline dyn_string_character_type *dyn_string_func(release)(dyn_string_typ
 
 MODERNLIB_PUBLIC
 void dyn_string_func(destroy)(dyn_string_type_name *self);
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -1,5 +1,8 @@
 #include "modernlib/allocator.h"
 #include "modernlib/resmgmt.h"
+
+#undef nullptr 
+#define nullptr NULL
 #include "utest.h"
 
 #define mem_ptr_typename int_ptr
@@ -20,7 +23,7 @@ typedef struct kilobyte {
 
 UTEST(MEM_PTR, CREATE_DESTROY) {
     for (int i = 0; i < 100000000; i++) {
-        kilobyte_ptr ip = kilobyte_ptr_allocate(std_allocator).result;
+        kilobyte_ptr ip = kilobyte_ptr_allocate(1, std_allocator).result;
         deferred(kilobyte_ptr_destroy(&ip)) {
             ASSERT_NE(ip.ptr, nullptr);
         }
@@ -28,7 +31,7 @@ UTEST(MEM_PTR, CREATE_DESTROY) {
 }
 
 UTEST(MEM_PTR, MOVE) {
-    kilobyte_ptr ip = kilobyte_ptr_allocate(std_allocator).result;
+    kilobyte_ptr ip = kilobyte_ptr_allocate(1, std_allocator).result;
     ASSERT_NE(ip.ptr, nullptr);
     deferred(kilobyte_ptr_destroy(&ip)) {
         for (int i = 0; i < 100000000; i++) {
