@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifdef __STDC_VERSION__
 #undef nullptr 
 #define nullptr NULL
+#endif
 #include "utest.h"
 
 #define M_COUNT(n) (n * 1000000)
@@ -13,7 +15,7 @@ UTEST(DATA_BUFFER, transient)
 {
     for (size_t i = 0; i < M_COUNT(100); i++) {
         srand(time(NULL));
-        char bufarr[] = { rand(), rand(), rand(), rand(), rand(), 1, 1, 1, 1, 1, };
+        char bufarr[] = { (char)rand(), (char)rand(), (char)rand(), (char)rand(), (char)rand(), 1, 1, 1, 1, 1, };
         data_buffer buf;
         scoped(buf = DATA_BUFFER_TRANSIENT(bufarr, sizeof bufarr),
                data_buffer_destroy(&buf)) {
@@ -59,7 +61,7 @@ UTEST(DATA_BUFFER, move_from)
             void *data = data_buffer_release(&buf);
             EXPECT_EQ(buf.data, nullptr);
 
-            const uint8_t *data_borrowed = data;
+            const uint8_t *data_borrowed = (const uint8_t *)data;
             scoped(moved = data_buffer_move_from(&data, len, allocator).buffer,
                    data_buffer_destroy(&moved)) {
                 EXPECT_EQ(data, nullptr);

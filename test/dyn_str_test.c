@@ -2,8 +2,10 @@
 #include "modernlib/dyn_cwstr.h"
 #include "modernlib/basis.h"
 
+#ifdef __STDC_VERSION__
 #undef nullptr 
 #define nullptr NULL
+#endif
 #include "utest.h"
 
 

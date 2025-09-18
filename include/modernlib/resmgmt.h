@@ -24,7 +24,20 @@
         !INTERNAL_VAR(_i_);                  \
         ((INTERNAL_VAR(_i_)) += 1), end)
 
-#ifdef __GNUC__
+#if !defined(__cplusplus) && defined(__clang__) && MODERNLIB_USE_CLANG_BLOCKS 
+
+typedef void (^__clang_cleanup_block)(void);
+
+MODERNLIB_ALWAYS_INLINE 
+static inline void __clang_block_cleanup_wrapper(__clang_cleanup_block *b) { (*b)(); }
+
+#define clang_defer __CLANG_DEFER(__COUNTER__)
+#define __CLANG_DEFER(N) __CLANG_DEFER_(N)
+#define __CLANG_DEFER_(N) __CLANG_DEFER__(__DEFER_FUNCTION_ ## N)
+#define __CLANG_DEFER__(F)      \
+    __attribute__((cleanup(__clang_block_cleanup_wrapper))) __clang_cleanup_block F = ^
+
+#elif __GNUC__
 /*
  * from https://gustedt.wordpress.com/2025/01/06/simple-defer-ready-to-use/
  */
@@ -64,6 +77,8 @@ struct __df_st  : T {
 
 #if defined(cpp_defer)
     #define defer_stmt cpp_defer
+#elif defined(clang_defer)
+    #define defer_stmt clang_defer
 #elif defined(gnu_defer)
     #define defer_stmt gnu_defer
 #endif

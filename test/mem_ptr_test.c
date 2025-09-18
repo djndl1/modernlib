@@ -1,8 +1,10 @@
 #include "modernlib/allocator.h"
 #include "modernlib/resmgmt.h"
 
+#ifdef __STDC_VERSION__
 #undef nullptr 
 #define nullptr NULL
+#endif
 #include "utest.h"
 
 #define mem_ptr_typename int_ptr
