@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include "modernlib/basis.h"
 
-#undef nullptr 
+#ifdef __STDC_VERSION__
+#undef nullptr
 #define nullptr NULL
-#include <utest.h>
+#endif
+#include "utest.h"
 
 UTEST(RES_MGMT, MOVE_RES)
 {
@@ -26,10 +28,10 @@ UTEST(RES_MGMT, MOVE_PTR)
     move_ptr(p1, p2);
 
     EXPECT_EQ(p2, &b);
-    //EXPECT_EQ(p1, nullptr);
+    EXPECT_EQ(p1, nullptr);
 }
 
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__cplusplus)
 
 void inner_scope(int *a)
 {
@@ -39,7 +41,7 @@ void inner_scope(int *a)
     };
 }
 
-UTEST(RES_MGMT, GNU_DEFER) 
+UTEST(RES_MGMT, DEFER_STMT) 
 {
     int a = 1;
 

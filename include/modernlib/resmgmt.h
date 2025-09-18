@@ -34,8 +34,10 @@
 #define __GNU_DEFER_(N) __GNU_DEFER__(__DEFER_FUNCTION_ ## N, __DEFER_VARIABLE_ ## N)
 
 #define __GNU_DEFER__(F, V)      \
+    MODERNLIB_ALWAYS_INLINE inline \
     auto void F(int*);         \
     __attribute__((cleanup(F))) int V; \
+    MODERNLIB_ALWAYS_INLINE inline \
     auto void F(int*)
 
 #endif

@@ -1,4 +1,10 @@
 set(CMAKE_CXX_STANDARD 23)
+if (BUILD_TESTS_AS_CXX)
+  set_source_files_properties(
+    resmgmt_test.c
+    PROPERTIES LANGUAGE CXX
+    )
+endif()
 
 include_directories(AFTER ${CMAKE_SOURCE_DIR}/test)
 link_libraries(modernlib)
@@ -7,10 +13,6 @@ add_executable(resmgmt_test resmgmt_test.c)
 set_property(TARGET resmgmt_test PROPERTY C_EXTENSIONS ON)
 add_test(NAME resmgmt_test
   COMMAND resmgmt_test)
-
-add_executable(resmgmt_test_cpp resmgmt_test.cpp)
-add_test(NAME resmgmt_test_cpp
-  COMMAND resmgmt_test_cpp)
 
 add_executable(dyn_str_test dyn_str_test.c)
 add_test(NAME dyn_str_test
