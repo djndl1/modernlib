@@ -31,7 +31,7 @@ UTEST(RES_MGMT, MOVE_PTR)
     EXPECT_EQ(p1, nullptr);
 }
 
-#if defined(__GNUC__) || defined(__cplusplus)
+#if defined(MODERNLIB_USE_DEFER_STMT)
 
 void inner_scope(int *a)
 {

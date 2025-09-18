@@ -17,7 +17,9 @@ include(CheckLibraryExists)
 check_library_exists(objc _NSConcreteStackBlock "" HAVE_OBJC_LIB)
 check_library_exists(BlocksRuntime _NSConcreteStackBlock "" HAVE_BLOCKSRUNTIME_LIB)
 
-set(MODERNLIB_USE_DEFER_STMT ON)
+if (${HAVE_OBJC_LIB} OR ${HAVE_BLOCKSRUNTIME_LIB})
+  set(MODERNLIB_USE_DEFER_STMT ON)
+endif()
 
 if (${MODERNLIB_USE_DEFER_STMT})
   add_compile_definitions(MODERNLIB_USE_DEFER_STMT) 
