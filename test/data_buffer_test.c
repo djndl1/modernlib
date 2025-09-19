@@ -15,7 +15,7 @@ UTEST(DATA_BUFFER, transient)
 {
     for (size_t i = 0; i < M_COUNT(100); i++) {
         srand(time(NULL));
-        char bufarr[] = { (char)rand(), (char)rand(), (char)rand(), (char)rand(), (char)rand(), 1, 1, 1, 1, 1, };
+        uint8_t bufarr[] = { (uint8_t)rand(), (uint8_t)rand(), (uint8_t)rand(), (uint8_t)rand(), (uint8_t)rand(), 1, 1, 1, 1, 1, };
         data_buffer buf;
         scoped(buf = DATA_BUFFER_TRANSIENT(bufarr, sizeof bufarr),
                data_buffer_destroy(&buf)) {
