@@ -73,3 +73,8 @@ add_test(NAME datetime_test
 add_executable(numerics_clamp_test numerics_clamp_test.c)
 add_test(NAME numerics_clamp_test
   COMMAND numerics_clamp_test)
+
+add_executable(numerics_clamp_test_fixed_int numerics_clamp_test.c)
+target_compile_definitions(numerics_clamp_test_fixed_int PRIVATE MODERNLIB_USE_FIXED_INT_NUMERIC_FUNCTIONS)
+add_test(NAME numerics_clamp_test_fixed_int
+  COMMAND numerics_clamp_test_fixed_int)

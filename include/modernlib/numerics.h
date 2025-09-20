@@ -5,7 +5,7 @@
 
 #ifdef __STDC_VERSION__
 
-#ifdef MODERNLIB_USE_FIXED_INT_NUMERICS
+#ifdef MODERNLIB_USE_FIXED_INT_NUMERIC_FUNCTIONS
 #define clamp(value, min, max) \
 _Generic((value + min - max), \
     uint8_t : clamp_uint8_t,     \
@@ -39,6 +39,74 @@ _Generic((value + min - max), \
 #endif
 
 #endif
+
+#ifdef MODERNLIB_USE_FIXED_INT_NUMERIC_FUNCTIONS
+
+#define clamp_typename int8_t 
+#define clamp_funcname clamp_int8_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename int16_t 
+#define clamp_funcname clamp_int16_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename int32_t 
+#define clamp_funcname clamp_int32_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename int64_t 
+#define clamp_funcname clamp_int64_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint64_t 
+#define clamp_funcname clamp_uint64_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint32_t 
+#define clamp_funcname clamp_uint32_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint16_t 
+#define clamp_funcname clamp_uint16_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint8_t
+#define clamp_funcname clamp_uint8_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#ifdef __GNUC__
+
+#define clamp_typename __int128 
+#define clamp_funcname clamp_int128_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename unsigned __int128 
+#define clamp_funcname clamp_uint128_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#endif
+
+#else
 
 #define clamp_typename unsigned char 
 #define clamp_funcname clamp_unsigned_char
@@ -106,6 +174,8 @@ _Generic((value + min - max), \
 #undef clamp_typename
 #undef clamp_funcname
 
+#endif
+
 #define clamp_typename float 
 #define clamp_funcname clamp_float
 #include "modernlib/clamp_itf.h"
@@ -123,73 +193,5 @@ _Generic((value + min - max), \
 #include "modernlib/clamp_itf.h"
 #undef clamp_typename
 #undef clamp_funcname
-
-#ifdef MODERNLIB_USE_FIXED_INT_NUMERICS
-
-#define clamp_typename int8_t 
-#define clamp_funcname clamp_int8_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename int16_t 
-#define clamp_funcname clamp_int16_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename int32_t 
-#define clamp_funcname clamp_int32_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename int64_t 
-#define clamp_funcname clamp_int64_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename uint64_t 
-#define clamp_funcname clamp_uint64_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename uint32_t 
-#define clamp_funcname clamp_uint32_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename uint16_t 
-#define clamp_funcname clamp_uint16_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename uint8_t
-#define clamp_funcname clamp_uint8_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#ifdef __GNUC__
-
-#define clamp_typename __int128 
-#define clamp_funcname clamp_int128_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#define clamp_typename unsigned __int128 
-#define clamp_funcname clamp_uint128_t
-#include "modernlib/clamp_itf.h"
-#undef clamp_typename
-#undef clamp_funcname
-
-#endif
-
-#endif
 
 #endif /* ifndef MODERNLIB_NUMERICS_H_ */

@@ -9,6 +9,12 @@
 #endif
 #include "utest.h"
 
+UTEST(CLAMP, INT)
+{
+    auto expected = (int)6;
+    auto result = clamp((int)7, (int)1, (int)6);
+    EXPECT_EQ(expected, result);
+}
 
 UTEST(CLAMP, UINT8)
 {
