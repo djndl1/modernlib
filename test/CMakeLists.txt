@@ -7,6 +7,7 @@ if (BUILD_TESTS_AS_CXX)
     mem_ptr_test.c
     utfconverter_test.c
     datetime_test.c
+    numerics_clamp_test.c
     PROPERTIES LANGUAGE CXX
     )
 endif()
@@ -17,7 +18,10 @@ include(CheckLibraryExists)
 check_library_exists(objc _NSConcreteStackBlock "" HAVE_OBJC_LIB)
 check_library_exists(BlocksRuntime _NSConcreteStackBlock "" HAVE_BLOCKSRUNTIME_LIB)
 
-if (${HAVE_OBJC_LIB} OR ${HAVE_BLOCKSRUNTIME_LIB})
+if (${HAVE_OBJC_LIB})
+  set(MODERNLIB_USE_DEFER_STMT ON)
+endif() 
+if (${HAVE_BLOCKSRUNTIME_LIB})
   set(MODERNLIB_USE_DEFER_STMT ON)
 endif()
 
@@ -65,3 +69,7 @@ add_test(NAME utfconverter_test
 add_executable(datetime_test datetime_test.c)
 add_test(NAME datetime_test
   COMMAND datetime_test)
+
+add_executable(numerics_clamp_test numerics_clamp_test.c)
+add_test(NAME numerics_clamp_test
+  COMMAND numerics_clamp_test)

@@ -3,8 +3,11 @@
 
 #include "modernlib/basis.h"
 
+#ifdef __STDC_VERSION__
+
+#ifdef MODERNLIB_USE_FIXED_INT_NUMERICS
 #define clamp(value, min, max) \
-_Generic((value), \
+_Generic((value + min - max), \
     uint8_t : clamp_uint8_t,     \
     uint16_t : clamp_uint16_t,     \
     uint32_t : clamp_uint32_t,     \
@@ -12,7 +15,14 @@ _Generic((value), \
     int64_t : clamp_int64_t,     \
     int32_t : clamp_int32_t,     \
     int16_t : clamp_int16_t,     \
-    int8_t : clamp_int8_t,     \
+    int8_t : clamp_int8_t,      \
+    double : clamp_double,     \
+    long double : clamp_long_double,     \
+    float : clamp_float)(value, min, max)
+#else
+#define clamp(value, min, max) \
+_Generic((value + min - max), \
+    long double : clamp_long_double,     \
     double : clamp_double,     \
     float : clamp_float,     \
     long long : clamp_long_long,     \
@@ -26,172 +36,160 @@ _Generic((value), \
     signed char : clamp_signed_char,     \
     char : clamp_char,     \
     unsigned char : clamp_unsigned_char)(value, min, max)
+#endif
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-unsigned char clamp_unsigned_char(unsigned char value, unsigned char min, unsigned char max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#endif
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-char clamp_char(char value, char min, char max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename unsigned char 
+#define clamp_funcname clamp_unsigned_char
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-signed char clamp_signed_char(signed char value, signed char min, signed char max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename char 
+#define clamp_funcname clamp_char
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-short clamp_short(short value, short min, short max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename signed char 
+#define clamp_funcname clamp_signed_char
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-unsigned short clamp_unsigned_short(unsigned short value, unsigned short min, unsigned short max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename short 
+#define clamp_funcname clamp_short
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-unsigned int clamp_unsigned_int(unsigned int value, unsigned int min, unsigned int max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename unsigned short 
+#define clamp_funcname clamp_unsigned_short
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-int clamp_int(int value, int min, int max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename unsigned int 
+#define clamp_funcname clamp_unsigned_int
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-unsigned long clamp_unsigned_long(unsigned long value, unsigned long min, unsigned long max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename int 
+#define clamp_funcname clamp_int
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-long clamp_long(long value, long min, long max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename unsigned long 
+#define clamp_funcname clamp_unsigned_long 
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-unsigned long long clamp_unsigned_long_long(unsigned long long value, unsigned long long min, unsigned long long max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
-MODERNLIB_ALWAYS_INLINE
-static inline
-long long clamp_long_long(long long value, long long min, long long max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename long 
+#define clamp_funcname clamp_long
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-float clamp_float(float value, float min, float max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename unsigned long long 
+#define clamp_funcname clamp_unsigned_long_long
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-double clamp_double(double value, double min, double max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename long long 
+#define clamp_funcname clamp_long_long
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-int8_t clamp_int8_t(int8_t value, int8_t min, int8_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename float 
+#define clamp_funcname clamp_float
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-int16_t clamp_int16_t(int16_t value, int16_t min, int16_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename double 
+#define clamp_funcname clamp_double
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-int32_t clamp_int32_t(int32_t value, int32_t min, int32_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename long double 
+#define clamp_funcname clamp_long_double
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-int64_t clamp_int64_t(int64_t value, int64_t min, int64_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#ifdef MODERNLIB_USE_FIXED_INT_NUMERICS
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-uint64_t clamp_uint64_t(uint64_t value, uint64_t min, uint64_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename int8_t 
+#define clamp_funcname clamp_int8_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-uint32_t clamp_uint32_t(uint32_t value, uint32_t min, uint32_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename int16_t 
+#define clamp_funcname clamp_int16_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-uint16_t clamp_uint16_t(uint16_t value, uint16_t min, uint16_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename int32_t 
+#define clamp_funcname clamp_int32_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
 
-MODERNLIB_ALWAYS_INLINE
-static inline
-uint8_t clamp_uint8_t(uint8_t value, uint8_t min, uint8_t max)
-{
-    auto max_clamped = value > max ? max : value;
-    return max_clamped < min ? min : max_clamped;
-}
+#define clamp_typename int64_t 
+#define clamp_funcname clamp_int64_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint64_t 
+#define clamp_funcname clamp_uint64_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint32_t 
+#define clamp_funcname clamp_uint32_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint16_t 
+#define clamp_funcname clamp_uint16_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename uint8_t
+#define clamp_funcname clamp_uint8_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#ifdef __GNUC__
+
+#define clamp_typename __int128 
+#define clamp_funcname clamp_int128_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#define clamp_typename unsigned __int128 
+#define clamp_funcname clamp_uint128_t
+#include "modernlib/clamp_itf.h"
+#undef clamp_typename
+#undef clamp_funcname
+
+#endif
+
+#endif
 
 #endif /* ifndef MODERNLIB_NUMERICS_H_ */
