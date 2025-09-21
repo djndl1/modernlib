@@ -41,6 +41,12 @@ UTEST(CARRAY, WHILE_LOOP)
 		}
     EXPECT_EQ(15, sum);
 
+    sum = 0;
+    foreach_begin_end(carray_int, arr, array_end(arr), it) {
+				sum += icurrent(it);
+    }
+    EXPECT_EQ(15, sum);
+
 }
 
 UTEST_MAIN();
