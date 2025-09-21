@@ -8,6 +8,7 @@ if (BUILD_TESTS_AS_CXX)
     utfconverter_test.c
     datetime_test.c
     numerics_clamp_test.c
+    carray_test.c
     PROPERTIES LANGUAGE CXX
     )
 endif()
@@ -76,5 +77,7 @@ add_test(NAME numerics_clamp_test
 
 add_executable(numerics_clamp_test_fixed_int numerics_clamp_test.c)
 target_compile_definitions(numerics_clamp_test_fixed_int PRIVATE MODERNLIB_USE_FIXED_INT_NUMERIC_FUNCTIONS)
-add_test(NAME numerics_clamp_test_fixed_int
-  COMMAND numerics_clamp_test_fixed_int)
+add_test(NAME numerics_clamp_test_fixed_int COMMAND numerics_clamp_test_fixed_int)
+
+add_executable(carray_test carray_test.c)
+add_test(NAME carray_test COMMAND carray_test)
