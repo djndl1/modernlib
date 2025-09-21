@@ -9,7 +9,7 @@
 
 #ifdef __cplusplus
 
-#define make_array(typ, N) (typ{ { 0 }, N })
+#define make_array(typ, N) (carray_type(typ, N){ {0}, N })
 
 #else
 
