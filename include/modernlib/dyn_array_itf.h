@@ -24,6 +24,24 @@ typedef struct dyn_array_result_type_name {
     dyn_array_type_name array;
 } dyn_array_result_type_name;
 
+#define array_typename dyn_array_type_name
+#define array_element_type dyn_array_element_type
+#include "modernlib/array_iterator_itf.h"
+#undef array_typename 
+#undef array_element_type 
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_array_type_name) iterator_new(dyn_array_type_name)(dyn_array_type_name self)
+{
+    iterator_typename(dyn_array_type_name) iter;
+    dyn_array_element_type* start = (dyn_array_element_type*)self._data.data;
+    iter.current = start;
+    iter.end = start + self._len;
+    return iter;
+}
+
+
 MODERNLIB_PUBLIC
 dyn_array_result_type_name dyn_array_func(of_capacity)(size_t capacity,
                                                        const mem_allocator *allocator);

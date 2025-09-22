@@ -20,6 +20,7 @@
 #include "modernlib/allocator.h"
 #include "modernlib/internal/compilers.h"
 #include "modernlib/dyn_str_macro.h"
+#include "modernlib/foreach.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -139,6 +140,50 @@ static inline dyn_string_character_type *dyn_string_func(release)(dyn_string_typ
 
 MODERNLIB_PUBLIC
 void dyn_string_func(destroy)(dyn_string_type_name *self);
+
+typedef struct iterator_typename(dyn_string_type_name) {
+		dyn_string_character_type *current;
+		const dyn_string_character_type *end;
+} iterator_typename(dyn_string_type_name);
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_string_type_name) iterator_new(dyn_string_type_name)(dyn_string_type_name self)
+{
+    iterator_typename(dyn_string_type_name) string_iter;
+    auto chararray_iter = iterator_new(dyn_string_internal_array_type)(self._char_array);
+    string_iter.current = chararray_iter.current;
+    string_iter.end = string_iter.current + dyn_string_func(len)(self);
+    return string_iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_string_type_name) iterator_new_from(dyn_string_type_name)(dyn_string_character_type* begin, const dyn_string_character_type* end)
+{
+    iterator_typename(dyn_string_type_name) string_iter;
+    string_iter.current = begin;
+    string_iter.end = end;
+
+    return string_iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+bool iterator_stopped(dyn_string_type_name)(iterator_typename(dyn_string_type_name) self)
+{
+    return self.current == self.end;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+void iterator_next(dyn_string_type_name)(iterator_typename(dyn_string_type_name) *self)
+{
+    if (self == nullptr) return;
+
+    self->current++;
+}
+
 
 #ifdef __cplusplus
 }

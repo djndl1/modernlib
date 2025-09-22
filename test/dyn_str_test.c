@@ -1,6 +1,7 @@
 #include "modernlib/dyn_cstr.h"
 #include "modernlib/dyn_cwstr.h"
 #include "modernlib/basis.h"
+#include "modernlib/foreach.h"
 
 #ifdef __STDC_VERSION__
 #undef nullptr 
@@ -153,6 +154,35 @@ UTEST(DYN_CSTR, concat)
             fflush(stdout);
         }
     }
+}
+
+UTEST(DYN_CSTR, foreach)
+{
+    dyn_cstr s;
+    size_t count = 0;
+    scoped(s = dyn_cstr_from_nts_stdalloc("ABC").str, dyn_cstr_destroy(&s)) {
+        foreach_iter(dyn_cstr, s, it) {
+            char c = dyn_cstr_at(s, count);
+            char it_c = icurrent(it);
+            EXPECT_EQ(it_c, c);
+            count++;
+        }
+    }
+    ASSERT_EQ(count, dyn_cstr_len(s));
+    ASSERT_EQ(count, 3);
+
+    size_t count2 = 0;
+    scoped(s = dyn_cstr_from_nts_stdalloc("").str, dyn_cstr_destroy(&s)) {
+
+        foreach_iter(dyn_cstr, s, it) {
+            char c = dyn_cstr_at(s, count2);
+            char it_c = icurrent(it);
+            EXPECT_EQ(it_c, c);
+            count2++;
+        }
+    }
+    ASSERT_EQ(count2, dyn_cstr_len(s));
+    ASSERT_EQ(0, count2);
 }
 
 UTEST_MAIN();
