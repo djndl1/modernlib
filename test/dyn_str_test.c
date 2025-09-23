@@ -185,4 +185,20 @@ UTEST(DYN_CSTR, foreach)
     ASSERT_EQ(0, count2);
 }
 
+UTEST(DYN_CSTR, iterator)
+{
+    dyn_cstr s;
+    scoped(s = dyn_cstr_from_nts_stdalloc("ABC").str, dyn_cstr_destroy(&s)) {
+        dyn_cstr_iter it = iterator_begin(dyn_cstr)(&s);
+        dyn_cstr_iter end = iterator_end(dyn_cstr)(&s);
+        size_t count = 0;
+        for (auto cur = it; iterator_stopped(dyn_cstr)(it, end) ; iterator_next(dyn_cstr)(&it)) {
+            char c = dyn_cstr_at(s, count);
+            char it_c = icurrent(cur);
+            EXPECT_EQ(it_c, c);
+            count++;
+        }
+    }
+}
+
 UTEST_MAIN();

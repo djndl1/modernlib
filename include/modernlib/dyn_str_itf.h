@@ -142,46 +142,72 @@ MODERNLIB_PUBLIC
 void dyn_string_func(destroy)(dyn_string_type_name *self);
 
 typedef struct iterator_typename(dyn_string_type_name) {
-		dyn_string_character_type *current;
-		const dyn_string_character_type *end;
+		dyn_string_character_type *value;
 } iterator_typename(dyn_string_type_name);
 
 MODERNLIB_ALWAYS_INLINE
 static inline
-iterator_typename(dyn_string_type_name) iterator_new(dyn_string_type_name)(dyn_string_type_name self)
+iterator_typename(dyn_string_type_name) iterator_begin(dyn_string_type_name)(const dyn_string_type_name *self)
 {
-    iterator_typename(dyn_string_type_name) string_iter;
-    auto chararray_iter = iterator_new(dyn_string_internal_array_type)(self._char_array);
-    string_iter.current = chararray_iter.current;
-    string_iter.end = string_iter.current + dyn_string_func(len)(self);
-    return string_iter;
+    iterator_typename(dyn_string_type_name) iter;
+    iter.value = dyn_string_func(nts)(*self);
+    return iter;
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline
-iterator_typename(dyn_string_type_name) iterator_new_from(dyn_string_type_name)(dyn_string_character_type* begin, const dyn_string_character_type* end)
+iterator_typename(dyn_string_type_name) iterator_end(dyn_string_type_name)(const dyn_string_type_name *self)
 {
-    iterator_typename(dyn_string_type_name) string_iter;
-    string_iter.current = begin;
-    string_iter.end = end;
-
-    return string_iter;
+    iterator_typename(dyn_string_type_name) iter;
+    iter.value = dyn_string_func(nts)(*self) + dyn_string_func(len)(*self);
+    return iter;
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline
-bool iterator_stopped(dyn_string_type_name)(iterator_typename(dyn_string_type_name) self)
+iterator_typename(dyn_string_type_name) iterator_rbegin(dyn_string_type_name)(const dyn_string_type_name *self)
 {
-    return self.current == self.end;
+    iterator_typename(dyn_string_type_name) iter;
+    iter.value = dyn_string_func(nts)(*self) + dyn_string_func(len)(*self) - 2;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_string_type_name) iterator_rend(dyn_string_type_name)(const dyn_string_type_name *self)
+{
+    iterator_typename(dyn_string_type_name) iter;
+    iter.value = dyn_string_func(nts)(*self) - 1;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+bool iterator_stopped(dyn_string_type_name)(iterator_typename(dyn_string_type_name) l, iterator_typename(dyn_string_type_name) r)
+{
+    return l.value == r.value;
 }
 
 MODERNLIB_ALWAYS_INLINE
 static inline
 void iterator_next(dyn_string_type_name)(iterator_typename(dyn_string_type_name) *self)
 {
-    if (self == nullptr) return;
+    if (self == nullptr) {
+        return;
+    }
 
-    self->current++;
+    self->value++;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+void iterator_rev_next(dyn_string_type_name)(iterator_typename(dyn_string_type_name) *self)
+{
+    if (self == nullptr) {
+        return;
+    }
+
+    self->value--;
 }
 
 

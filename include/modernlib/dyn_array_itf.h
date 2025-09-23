@@ -24,24 +24,6 @@ typedef struct dyn_array_result_type_name {
     dyn_array_type_name array;
 } dyn_array_result_type_name;
 
-#define array_typename dyn_array_type_name
-#define array_element_type dyn_array_element_type
-#include "modernlib/array_iterator_itf.h"
-#undef array_typename 
-#undef array_element_type 
-
-MODERNLIB_ALWAYS_INLINE
-static inline
-iterator_typename(dyn_array_type_name) iterator_new(dyn_array_type_name)(dyn_array_type_name self)
-{
-    iterator_typename(dyn_array_type_name) iter;
-    dyn_array_element_type* start = (dyn_array_element_type*)self._data.data;
-    iter.current = start;
-    iter.end = start + self._len;
-    return iter;
-}
-
-
 MODERNLIB_PUBLIC
 dyn_array_result_type_name dyn_array_func(of_capacity)(size_t capacity,
                                                        const mem_allocator *allocator);
@@ -167,6 +149,48 @@ merror dyn_array_func(insert)(dyn_array_type_name *self,
 MODERNLIB_PUBLIC
 merror dyn_array_func(clear)(dyn_array_type_name *self, void (*destructor)(dyn_array_element_type*));
 
+
+#define array_typename dyn_array_type_name
+#define array_element_type dyn_array_element_type
+#include "modernlib/array_iterator_itf.h"
+#undef array_typename 
+#undef array_element_type 
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_array_type_name) iterator_begin(dyn_array_type_name)(const dyn_array_type_name *self)
+{
+    iterator_typename(dyn_array_type_name) iter;
+    iter.value = dyn_array_func(get_data)(*self);
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_array_type_name) iterator_end(dyn_array_type_name)(const dyn_array_type_name *self)
+{
+    iterator_typename(dyn_array_type_name) iter;
+    iter.value = dyn_array_func(get_data)(*self) + dyn_array_func(size)(*self);
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_array_type_name) iterator_rbegin(dyn_array_type_name)(const dyn_array_type_name *self)
+{
+    iterator_typename(dyn_array_type_name) iter;
+    iter.value = dyn_array_func(get_data)(*self) + dyn_array_func(size)(*self) - 1;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(dyn_array_type_name) iterator_rend(dyn_array_type_name)(const dyn_array_type_name *self)
+{
+    iterator_typename(dyn_array_type_name) iter;
+    iter.value = dyn_array_func(get_data)(*self) - 1;
+    return iter;
+}
 
 
 

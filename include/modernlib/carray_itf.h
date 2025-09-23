@@ -30,11 +30,37 @@ typedef struct carray_real_type {
 
 MODERNLIB_ALWAYS_INLINE
 static inline
-iterator_typename(carray_typename) iterator_new(carray_typename)(carray_real_type self)
+iterator_typename(carray_typename) iterator_begin(carray_typename)(carray_real_type *self)
 {
     iterator_typename(carray_typename) iter;
-    iter.current = self.data;
-    iter.end = self.data + self.size;
+    iter.value = self->data;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(carray_typename) iterator_end(carray_typename)(carray_real_type *self)
+{
+    iterator_typename(carray_typename) iter;
+    iter.value = self->data + self->size;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(carray_typename) iterator_rbegin(carray_typename)(carray_real_type *self)
+{
+    iterator_typename(carray_typename) iter;
+    iter.value = self->data + self->size - 1;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(carray_typename) iterator_rend(carray_typename)(carray_real_type *self)
+{
+    iterator_typename(carray_typename) iter;
+    iter.value = self->data - 1;
     return iter;
 }
 
