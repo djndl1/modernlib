@@ -19,7 +19,7 @@
 
 typedef struct carray_real_type {
 		carray_element_type data[carray_size];
-		size_t size;
+		const size_t size;
 } carray_real_type;
 
 #define array_typename carray_typename
