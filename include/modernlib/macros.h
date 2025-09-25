@@ -10,6 +10,8 @@ extern "C" {
 #define _CONCAT(a, b) a##b
 #define CONCAT(a, b) _CONCAT(a, b)
 #define INTERNAL_VAR(v) CONCAT(v, __LINE__)
+#define NUM_VA_ARGS(typ, ...)  (sizeof((typ[]){__VA_ARGS__})/sizeof(typ))
+#define PROTECTED_ARGS(...) __VA_ARGS__
 
 #ifdef __cplusplus
 }
