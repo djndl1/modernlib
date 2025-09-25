@@ -39,9 +39,9 @@
 		foreach_next(typname, begin, end, iter_var, next) 
 
 #define array_begin(arr) (arr + 0)
-#define array_end(arr) (arr + array_size(arr))
+#define array_end(arr) (arr + countof(arr))
 
-#define array_rbegin(arr) (arr + array_size(arr) - 1) 
+#define array_rbegin(arr) (arr + countof(arr) - 1) 
 #define array_rend(arr) (arr - 1)
 
 #define foreach_array(arr, iter_var) \

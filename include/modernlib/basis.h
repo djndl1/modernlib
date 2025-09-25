@@ -25,5 +25,7 @@ typedef struct {
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 #define array_size(arr) (sizeof(arr) / sizeof(arr[0]))
+#define countof(arr) array_size(arr)
+#define lengthof(arr) array_size(arr)
 
 #endif // UTIL_H_
