@@ -36,7 +36,7 @@ if(MSVC)
     target_compile_options(modernlib PRIVATE /fsanitize=address)
   endif()
 else()
-  target_compile_options(modernlib PRIVATE -fstrict-aliasing -Wall -Wstrict-aliasing -Wno-unused-function)
+  target_compile_options(modernlib PRIVATE -fstrict-aliasing -Wall -Wstrict-aliasing -Wno-unused-function -Werror=vla)
 
   if($<CONFIG> STREQUAL "Debug")
     target_compile_options(modernlib PRIVATE -fsanitize=address)
