@@ -4,6 +4,7 @@
 #include "modernlib/basis.h"
 #include "modernlib/errors.h"
 #include "modernlib/allocator.h"
+#include "modernlib/foreach.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,6 +123,76 @@ static inline buffer_alloc_result data_buffer_copy(const data_buffer source)
     alloc_result.buffer = data_buffer_move(&newresult.buffer);
     alloc_result.error = 0;
     return alloc_result;
+}
+
+typedef struct iterator_typename(data_buffer) {
+		uint8_t *value;
+} iterator_typename(data_buffer);
+
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+bool iterator_stopped(data_buffer)(iterator_typename(data_buffer) l, iterator_typename(data_buffer) end)
+{
+    return l.value == end.value;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+void iterator_next(data_buffer)(iterator_typename(data_buffer) *self)
+{
+    if (self == nullptr) {
+        return;
+    }
+
+    self->value++;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+void iterator_rev_next(data_buffer)(iterator_typename(data_buffer) *self)
+{
+    if (self == nullptr) {
+        return;
+    }
+
+    self->value--;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(data_buffer) iterator_begin(data_buffer)(data_buffer *self)
+{
+    iterator_typename(data_buffer) iter;
+    iter.value = (uint8_t*)self->data;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(data_buffer) iterator_end(data_buffer)(data_buffer *self)
+{
+    iterator_typename(data_buffer) iter;
+    iter.value = ((uint8_t*)self->data) + self->length;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(data_buffer) iterator_rbegin(data_buffer)(data_buffer *self)
+{
+    iterator_typename(data_buffer) iter;
+    iter.value = ((uint8_t*)self->data) + self->length - 1;
+    return iter;
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+iterator_typename(data_buffer) iterator_rend(data_buffer)(data_buffer *self)
+{
+    iterator_typename(data_buffer) iter;
+    iter.value = ((uint8_t*)self->data) - 1;
+    return iter;
 }
 
 #ifdef __cplusplus

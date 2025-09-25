@@ -1,5 +1,6 @@
 #include "modernlib/data_buffer.h"
 #include "modernlib/basis.h"
+#include "modernlib/foreach.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -225,6 +226,22 @@ UTEST(DATA_BUFFER, move)
 
             initial = data_buffer_move(&target);
         }
+    }
+}
+
+UTEST(DATA_BUFFER, iterator)
+{
+    data_buffer bytes10;
+    const size_t len = 10;
+    scoped(bytes10 = data_buffer_new(len, stack_allocator).buffer, data_buffer_destroy(&bytes10)) {
+        uint8_t b = 0;
+        uint8_t *buffer = data_buffer_as_byte_array(bytes10);
+        foreach_iter(data_buffer, bytes10, it) {
+            icurrent(it) = b;
+            EXPECT_EQ(buffer[b], b);
+            b++;
+        }
+        EXPECT_EQ(len, b);
     }
 }
 
