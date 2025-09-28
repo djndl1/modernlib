@@ -3,9 +3,9 @@
 #endif
 
 #include <stdbool.h>
-#include "basis.h"
+#include "modernlib/basis.h"
 
-#include "macros.h"
+#include "modernlib/optional.h"
 
 typedef struct optional_type_name {
     bool _present;
@@ -14,30 +14,38 @@ typedef struct optional_type_name {
     } _hidden_obj;
 } optional_type_name;
 
-#define optional_funcname(func) CONCAT(optional_element_type, _ ## func)
+typedef struct {
+    bool temp_present;
+    optional_element_type value;
+} CONCAT(__temp_var_, optiona_type_name);
 
-MODERNLIB_INLINE
-static inline optional_type_name optional_funcname(some)(optional_element_type val)
+MODERNLIB_ALWAYS_INLINE
+static inline
+CONCAT(__temp_var_, optiona_type_name) optional_funcname(optional_type_name, ifsome_helper)(const optional_type_name self)
 {
-    return (optional_type_name){ ._present = true, ._hidden_obj.t_value = val, };
+    CONCAT(__temp_var_, optiona_type_name) temp;
+    temp.value = _optional_val(self);
+    temp.temp_present = self._present;
+
+    return temp;
 }
 
-#define optional_map_to(U, opt, mapping) (optional_present(opt) ?           \
-                                       optional_some(U)(mapping(_optional_val(opt))) \
-                                       : optional_none(U))
-
-typedef bool (*CONCAT(optional_element_t, _pred))(optional_element_t);
-
-MODERNLIB_INLINE
-static inline optional_name CONCANT(optional_element_t, _filter)(
-    optional_name opt,
-    CONCAT(optional_element_t, _pred) pred)
+/**
+ * Not safe due to use of out pointer
+ */
+MODERNLIB_ALWAYS_INLINE
+static inline
+bool optional_funcname(optional_type_name, try_get)(const optional_type_name self, optional_element_type *value)
 {
-    return optional_present(opt)
-        ? (pred(_optional_val(opt)) ? opt : optional_none(optional_element_t))
-        : optional_none(optional_element_t);
+    if (optional_present(self)) {
+        if (value != nullptr) {
+            *value = _optional_val(self);
+        }
+        return true;
+    } else {
+        return false;
+    }
 }
 
-#endif // optional_element_t
-#undef optional_element_t
-#undef optional_name
+#undef optional_element_type
+#undef optional_type_name

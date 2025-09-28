@@ -9,6 +9,7 @@ if (BUILD_TESTS_AS_CXX)
     datetime_test.c
     numerics_clamp_test.c
     carray_test.c
+    optional_test.c
     PROPERTIES LANGUAGE CXX
     )
 endif()
@@ -81,3 +82,9 @@ add_test(NAME numerics_clamp_test_fixed_int COMMAND numerics_clamp_test_fixed_in
 
 add_executable(carray_test carray_test.c)
 add_test(NAME carray_test COMMAND carray_test)
+
+add_executable(optional_test optional_test.c)
+if (NOT BUILD_TESTS_AS_CXX)
+  target_compile_options(optional_test PRIVATE -std=gnu2y)
+endif()
+add_test(NAME optional_test COMMAND optional_test)
