@@ -30,10 +30,10 @@
                 : optional_none(U))
 
 // We won't be needing this anymore once we have if-declarations in C2y
-#define optional_ifsome(opt_typ, opt) \
+#define optional_ifsome(opt_typ, opt, optval) \
     for (auto optval = optional_funcname(opt_typ, ifsome_helper)(opt); optval.temp_present; optval.temp_present = false)
 
-#define optional_ifnone(opt_typ, opt) \
+#define optional_ifnone(opt_typ, opt, optval) \
     for (auto optval = optional_funcname(opt_typ, ifsome_helper)(opt); !optval.temp_present; optval.temp_present = true)
 
 #if __GNUC__ >= 15  || defined(__cplusplus)

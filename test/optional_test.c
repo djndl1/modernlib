@@ -57,10 +57,10 @@ UTEST(OPTIONAL, try_get)
 UTEST(OPTIONAL, ifsome_ifnone)
 {
 		auto opt = optional_some(optional_bool, true);
-		optional_ifsome(optional_bool, opt) {
+		optional_ifsome(optional_bool, opt, optval) {
 				EXPECT_EQ(optval.value, true);
 		}
-		optional_ifnone(optional_bool, opt) {
+		optional_ifnone(optional_bool, opt, _) {
 				ASSERT_FALSE(true);
 		}
 }
