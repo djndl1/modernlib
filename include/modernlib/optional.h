@@ -29,6 +29,8 @@
                 ? (filter(_optional_val(opt)) ? opt : optional_none(U)) \
                 : optional_none(U))
 
+#define optional_inspect(opt_typ, opt, f) (optional_funcname(opt_typ, inspect)(opt, f))
+
 // We won't be needing this anymore once we have if-declarations in C2y
 #define optional_ifsome(opt_typ, opt, optval) \
     for (auto optval = optional_funcname(opt_typ, ifsome_helper)(opt); optval.temp_present; optval.temp_present = false)

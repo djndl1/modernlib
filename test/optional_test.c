@@ -1,6 +1,8 @@
 #include "modernlib/basis.h"
 #include "modernlib/optional.h"
 
+#include "modernlib/dyn_cstr.h"
+
 #ifdef __STDC_VERSION__
 
 #define nullptr NULL
@@ -12,6 +14,22 @@
 #include "modernlib/optional_itf.h"
 #undef optional_type_name
 #undef optional_element_type
+
+#define optional_element_type int
+#define optional_type_name optional_int
+#include "modernlib/optional_itf.h"
+#undef optional_type_name
+#undef optional_element_type
+
+#define optional_element_type dyn_cstr
+#define optional_type_name optional_cstr
+#include "modernlib/optional_itf.h"
+#undef optional_type_name
+#undef optional_element_type
+
+#define optional_element_type size_t
+#define optional_type_name optional_size
+#include "modernlib/optional_itf.h"
 
 UTEST(OPTIONAL, SOME)
 {
@@ -76,6 +94,41 @@ UTEST(OPTIONAL, if_declaration)
 		}
 }
 #endif
+ 
+static bool is_even(int n) 
+{
+		return n % 2 == 0;
+}
 
+UTEST(OPTIONAL, filter)
+{
+		EXPECT_FALSE(optional_present(optional_filter(optional_int, optional_none(optional_int), is_even)));
+		EXPECT_EQ(optional_or_else(optional_filter(optional_int, 
+																								optional_some(optional_int, 3), 
+																								is_even), 
+																0), 
+								0);
+		EXPECT_EQ(optional_or_else(optional_filter(optional_int, 
+																								optional_some(optional_int, 4), 
+																								is_even), 
+																0), 
+								4);
+}
+
+UTEST(OPTIONAL, map)
+{
+		auto maybe_some_string = optional_some(optional_cstr, dyn_cstr_from_nts_stdalloc("Hello, World!").str);
+		deferred(optional_inspect(optional_cstr, maybe_some_string, dyn_cstr_destroy)) {
+				auto maybe_some_len = optional_map(optional_size, maybe_some_string, dyn_cstr_len);
+				EXPECT_EQ(optional_or_else(maybe_some_len, 0), 13);
+
+		}
+
+		auto none = optional_none(optional_cstr);
+		deferred(optional_inspect(optional_cstr, none, dyn_cstr_destroy)) {
+				auto len_none = optional_map(optional_size, none, dyn_cstr_len);
+				EXPECT_TRUE(optional_empty(len_none));
+		}
+}
 
 UTEST_MAIN()

@@ -17,13 +17,13 @@ typedef struct optional_type_name {
 typedef struct {
     bool temp_present;
     optional_element_type value;
-} CONCAT(__temp_var_, optiona_type_name);
+} CONCAT(__temp_var_, optional_type_name);
 
 MODERNLIB_ALWAYS_INLINE
 static inline
-CONCAT(__temp_var_, optiona_type_name) optional_funcname(optional_type_name, ifsome_helper)(const optional_type_name self)
+CONCAT(__temp_var_, optional_type_name) optional_funcname(optional_type_name, ifsome_helper)(const optional_type_name self)
 {
-    CONCAT(__temp_var_, optiona_type_name) temp;
+    CONCAT(__temp_var_, optional_type_name) temp;
     temp.value = _optional_val(self);
     temp.temp_present = self._present;
 
@@ -45,6 +45,17 @@ bool optional_funcname(optional_type_name, try_get)(const optional_type_name sel
     } else {
         return false;
     }
+}
+
+MODERNLIB_ALWAYS_INLINE
+static inline
+optional_type_name optional_funcname(optional_type_name, inspect)(const optional_type_name self, void (*f)(optional_element_type *opt))
+{
+		optional_ifsome(optional_type_name, self, optval) {
+				f(&optval.value);
+		}
+
+    return self;
 }
 
 #undef optional_element_type
