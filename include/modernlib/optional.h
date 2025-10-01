@@ -15,9 +15,15 @@
 
 #define optional_try_get(opt_typ, opt, value) (optional_funcname(opt_typ, try_get)(opt, value))
 
+#define optional_is_some(opt) (opt._present)
 #define optional_present(opt) (opt._present)
+#define optional_is_none(opt) (!opt._present)
 #define optional_empty(opt) (!opt._present)
-#define optional_or_else(opt, alt) (opt._present ? _optional_val(opt) : alt)
+
+#define optional_is_some_and(opt, f) (opt._present && f(_optional_val(opt)))
+#define optional_is_none_or(opt, f) (optional_is_none(opt) || f(_optional_val(opt)))
+#define optional_unwrap_or(opt, alt) (opt._present ? _optional_val(opt) : alt)
+#define optional_unwrap_or_else(opt, f) (opt._present ? _optional_val(opt) : f())
 
 #define _optional_val(opt) (opt._hidden_obj.t_value)
 

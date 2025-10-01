@@ -31,19 +31,25 @@
 #define optional_type_name optional_size
 #include "modernlib/optional_itf.h"
 
+static bool generate_false()
+{
+		return false;
+}
+
 UTEST(OPTIONAL, SOME)
 {
 		auto opt = optional_some(optional_bool, true);
 		EXPECT_TRUE(optional_present(opt));
 
-		EXPECT_TRUE(optional_or_else(opt, true));
-		EXPECT_TRUE(optional_or_else(opt, false));
+		EXPECT_TRUE(optional_unwrap_or(opt, true));
+		EXPECT_TRUE(optional_unwrap_or(opt, false));
+		EXPECT_TRUE(optional_unwrap_or_else(opt, generate_false));
 
 		opt = optional_some(optional_bool, false);
 		EXPECT_TRUE(optional_present(opt));
 
-		EXPECT_FALSE(optional_or_else(opt, true));
-		EXPECT_FALSE(optional_or_else(opt, false));
+		EXPECT_FALSE(optional_unwrap_or(opt, true));
+		EXPECT_FALSE(optional_unwrap_or(opt, false));
 }
 
 UTEST(OPTIONAL, NONE)
@@ -52,8 +58,9 @@ UTEST(OPTIONAL, NONE)
 		EXPECT_TRUE(!optional_present(opt));
 		EXPECT_TRUE(optional_empty(opt));
 
-		EXPECT_TRUE(optional_or_else(opt, true));
-		EXPECT_FALSE(optional_or_else(opt, false));
+		EXPECT_TRUE(optional_unwrap_or(opt, true));
+		EXPECT_FALSE(optional_unwrap_or(opt, false));
+		EXPECT_FALSE(optional_unwrap_or_else(opt, generate_false));
 }
 
 UTEST(OPTIONAL, try_get) 
@@ -103,12 +110,12 @@ static bool is_even(int n)
 UTEST(OPTIONAL, filter)
 {
 		EXPECT_FALSE(optional_present(optional_filter(optional_int, optional_none(optional_int), is_even)));
-		EXPECT_EQ(optional_or_else(optional_filter(optional_int, 
+		EXPECT_EQ(optional_unwrap_or(optional_filter(optional_int, 
 																								optional_some(optional_int, 3), 
 																								is_even), 
 																0), 
 								0);
-		EXPECT_EQ(optional_or_else(optional_filter(optional_int, 
+		EXPECT_EQ(optional_unwrap_or(optional_filter(optional_int, 
 																								optional_some(optional_int, 4), 
 																								is_even), 
 																0), 
@@ -120,7 +127,7 @@ UTEST(OPTIONAL, map)
 		auto maybe_some_string = optional_some(optional_cstr, dyn_cstr_from_nts_stdalloc("Hello, World!").str);
 		deferred(optional_inspect(optional_cstr, maybe_some_string, dyn_cstr_destroy)) {
 				auto maybe_some_len = optional_map(optional_size, maybe_some_string, dyn_cstr_len);
-				EXPECT_EQ(optional_or_else(maybe_some_len, 0), 13);
+				EXPECT_EQ(optional_unwrap_or(maybe_some_len, 0), 13);
 
 		}
 
@@ -128,6 +135,50 @@ UTEST(OPTIONAL, map)
 		deferred(optional_inspect(optional_cstr, none, dyn_cstr_destroy)) {
 				auto len_none = optional_map(optional_size, none, dyn_cstr_len);
 				EXPECT_TRUE(optional_empty(len_none));
+		}
+}
+
+static bool greater_than_one(int x)
+{
+		return x > 1;
+}
+
+static bool length_greater_than_one(const dyn_cstr str)
+{
+		return dyn_cstr_len(str) > 1;
+}
+
+UTEST(OPTION, is_some_and)
+{
+		auto x = optional_some(optional_int, 2);
+		EXPECT_TRUE(optional_is_some_and(x, greater_than_one));
+
+		x = optional_some(optional_int, 0);
+		EXPECT_FALSE(optional_is_some_and(x, greater_than_one));
+
+		x = optional_none(optional_int);
+		EXPECT_FALSE(optional_is_some_and(x, greater_than_one));
+
+		auto y = optional_some(optional_cstr, dyn_cstr_from_nts_stdalloc("ownership").str);
+		deferred(optional_inspect(optional_cstr, y, dyn_cstr_destroy)) {
+				EXPECT_TRUE(optional_is_some_and(y, length_greater_than_one));
+		}
+}
+
+UTEST(OPTION, is_none_or)
+{
+		auto x = optional_some(optional_int, 2);
+		EXPECT_TRUE(optional_is_none_or(x, greater_than_one));
+
+		x = optional_some(optional_int, 0);
+		EXPECT_FALSE(optional_is_none_or(x, greater_than_one));
+
+		x = optional_none(optional_int);
+		EXPECT_TRUE(optional_is_none_or(x, greater_than_one));
+
+		auto y = optional_some(optional_cstr, dyn_cstr_from_nts_stdalloc("ownership").str);
+		deferred(optional_inspect(optional_cstr, y, dyn_cstr_destroy)) {
+				EXPECT_TRUE(optional_is_none_or(y, length_greater_than_one));
 		}
 }
 
