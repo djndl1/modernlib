@@ -10,6 +10,7 @@ if (BUILD_TESTS_AS_CXX)
     numerics_clamp_test.c
     carray_test.c
     optional_test.c
+    slice_test.c
     PROPERTIES LANGUAGE CXX
     )
 endif()
@@ -88,3 +89,6 @@ if (NOT BUILD_TESTS_AS_CXX)
   target_compile_options(optional_test PRIVATE -std=gnu2y)
 endif()
 add_test(NAME optional_test COMMAND optional_test)
+
+add_executable(slice_test slice_test.c)
+add_test(NAME slice_test COMMAND slice_test)
