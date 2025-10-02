@@ -12,7 +12,7 @@
 #include"utest.h"
 
 UTEST(UTFETest, BasicAssumptions) {
-    // not guaranteed by the standard, I assume so
+    // guaranteed by the standard, I assume so
     ASSERT_EQ(4, sizeof(char32_t));
     ASSERT_EQ(2, sizeof(char16_t));
 }
