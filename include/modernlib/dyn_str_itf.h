@@ -42,6 +42,13 @@ static inline dyn_string_character_type *dyn_string_func(nts)(const dyn_string_t
 }
 
 MODERNLIB_ALWAYS_INLINE
+static inline dyn_string_character_type *dyn_string_func(get_data_at)(const dyn_string_type_name self, size_t index)
+{
+    dyn_string_character_type *p = dyn_string_internal_array_func(get_data_at)(self._char_array, index);
+		return p;
+}
+
+MODERNLIB_ALWAYS_INLINE
 static inline dyn_string_character_type dyn_string_func(at)(const dyn_string_type_name self, size_t idx)
 {
     return dyn_string_func(nts)(self)[idx];

@@ -92,6 +92,15 @@ static inline dyn_array_element_type *dyn_array_func(get_data)(const dyn_array_t
     return pointer;
 }
 
+MODERNLIB_ALWAYS_INLINE
+static inline 
+dyn_array_element_type *dyn_array_func(get_data_at)(const dyn_array_type_name self, size_t index)
+{
+    // this cast does not violate strict aliasing:
+    //      the data there is always accessed as dyn_array_element_type
+    dyn_array_element_type *pointer = (dyn_array_element_type*)self._data.data;
+    return pointer + index;
+}
 
 MODERNLIB_ALWAYS_INLINE
 static inline dyn_array_element_type *dyn_array_func(release)(dyn_array_type_name *self)
